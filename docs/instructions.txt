@@ -1,0 +1,639 @@
+Şu an proje **FaceApp seviyesinde değil**. Ama artık “basit MediaPipe efekti” de değil. Doğru tanım şu:
+
+```text
+Teslim edilebilir core engine var.
+Üzerine asset, model inference ve frontend UX eklenirse ürünleşebilir.
+```
+
+Aşağıdaki kısmı README’ye “Developer Handoff / Roadmap” olarak koyabilirsin.
+
+---
+
+# Developer Handoff / Roadmap
+
+## Mevcut Durum
+
+Bu branch ile backend tarafında şu temel sistemler hazırlandı:
+
+```text
+- MediaPipe tabanlı 2D face anchor sistemi
+- BiSeNet face parsing / semantic mask altyapısı
+- DECA / FLAME true 3D mesh provider
+- Accessory placement engine
+- Beauty / makeup effect hookları
+- Geometry / expression hookları
+- Local model slot sistemi
+- SAM aging model slotu
+- LivePortrait expression model slotu
+- Optional AlbedoGAN future 3D provider status slotu
+- Plugin validator
+- Local model setup script
+- MediaPipe face_landmarker.task Windows path fix
+```
+
+Bu branch’in amacı bütün efektleri bitirmek değil; diğer geliştiricilerin üzerine çalışabileceği sağlam bir engine vermek.
+
+---
+
+# Kim Ne Yapacak?
+
+## Backend / Core Engine — Senin taraf
+
+Senin ana sorumluluğun şu olmalı:
+
+```text
+1. Core pipeline kırılmadan çalışsın.
+2. /api/upload ve /api/process eski frontend formatıyla çalışmaya devam etsin.
+3. Yeni effect_engine / photo_pipeline kontrollü şekilde entegre edilsin.
+4. Model slotları stabil kalsın.
+5. Setup script ve README düzgün olsun.
+6. Büyük model dosyaları git’e girmesin.
+7. Face parsing pathleri setup script ile uyumlu olsun.
+8. Debug/test dosyaları temizlensin.
+```
+
+Senin kısa vadede yapman gerekenler:
+
+```text
+- face_parsing.py dosyasını local_models/face-parsing.PyTorch yolunu da destekleyecek hale getir.
+- README’yi ekle.
+- .gitignore kontrolünü bitir.
+- gereksiz test/debug dosyalarını temizle veya tests/legacy altına taşı.
+- /api/process eski formatını kırmadığından emin ol.
+- git status içinde local_models weight/repo dosyaları görünmediğini kontrol et.
+- branch’i pushla.
+```
+
+Senin şu an **yapmaman gerekenler**:
+
+```text
+- SAM full aging inference’ı hemen gömmeye çalışma.
+- LivePortrait full expression inference’ı hemen gömmeye çalışma.
+- AlbedoGAN’ı Windows’ta zorla entegre etmeye çalışma.
+- Tüm test jpg/png outputlarını commit etme.
+- local_models içeriğini commit etme.
+```
+
+---
+
+## Frontend Ekibi Ne Yapacak?
+
+Frontend ekibinin işi:
+
+```text
+1. Kullanıcıdan fotoğraf alma.
+2. /api/upload ile backend’e gönderme.
+3. /api/process için eski ve yeni param formatını destekleme.
+4. Efekt sliderları oluşturma.
+5. Renk paletleri oluşturma.
+6. Asset seçimi UI’ı yapma.
+7. Before/after preview yapma.
+8. Hata mesajlarını düzgün göstermek.
+```
+
+Frontend’in göndereceği legacy format şu anda korunmalı:
+
+```json
+{
+  "mode": "expression",
+  "params": {
+    "smile_intensity": 0,
+    "eyebrow_height": 0,
+    "lip_intensity": 0,
+    "face_slimming": 0,
+    "aging_intensity": 1,
+    "item_type": "glasses"
+  }
+}
+```
+
+Yeni effect engine için önerilen format:
+
+```json
+{
+  "effects": {
+    "skin_smooth": {
+      "enabled": true,
+      "strength": 0.5
+    },
+    "lipstick": {
+      "enabled": true,
+      "color": "#A02040",
+      "intensity": 0.7
+    },
+    "hair_color": {
+      "enabled": true,
+      "color": "#7B3FE4",
+      "intensity": 0.75
+    },
+    "accessories": {
+      "enabled": true,
+      "items": [
+        {
+          "type": "glasses",
+          "asset_path": "assets/glasses/example.png",
+          "scale": 1.0
+        },
+        {
+          "type": "left_earring",
+          "asset_path": "assets/earrings/example.png",
+          "scale": 0.12,
+          "offset_y_ratio": 0.07
+        },
+        {
+          "type": "right_earring",
+          "asset_path": "assets/earrings/example.png",
+          "scale": 0.12,
+          "offset_y_ratio": 0.07
+        },
+        {
+          "type": "necklace",
+          "asset_path": "assets/necklaces/example.png",
+          "scale": 1.1,
+          "offset_y_ratio": 0.14
+        }
+      ]
+    }
+  }
+}
+```
+
+Frontend ekibi şunu bilmeli:
+
+```text
+- Accessory assetleri PNG + alpha channel olmalı.
+- Ruj/saç/makyaj renkleri hex color olarak gönderilebilir.
+- Slider değerleri 0.0 - 1.0 aralığında tutulmalı.
+- Eski mode sistemi kırılmamalı.
+```
+
+---
+
+## Accessory Ekibi Ne Yapacak?
+
+Accessory ekibinin işi:
+
+```text
+1. Gerçek PNG assetleri hazırlamak.
+2. Gözlük, küpe, kolye assetlerini assets/ içine koymak.
+3. Her asset için scale / offset preset belirlemek.
+4. Occlusion mask iyileştirmesi yapmak.
+5. Saç/kulak/yanak arkası gibi durumları maskelemek.
+```
+
+Mevcut engine şunları destekliyor:
+
+```text
+- glasses
+- left_earring
+- right_earring
+- necklace
+```
+
+Accessory engine şu an:
+
+```text
+- anchor seçiyor
+- asset scale ediyor
+- rotation uyguluyor
+- offset uyguluyor
+- alpha blend yapıyor
+- debug placeholder çizebiliyor
+```
+
+Eksik kalan profesyonel özellikler:
+
+```text
+- saçın arkasında kalan küpeyi maskeleme
+- yüz/çene önünde kalan kolye parçasını gizleme
+- 3D depth ordering
+- asset-specific fitting preset sistemi
+- farklı yüz açılarına göre asset perspektif düzeltmesi
+```
+
+---
+
+## Makeup Ekibi Ne Yapacak?
+
+Mevcut backend’de temel makeup hookları var:
+
+```text
+- lipstick
+- blush
+- eyebrow enhance
+- skin smooth
+- hair color
+```
+
+Makeup ekibinin işi:
+
+```text
+1. Daha doğal lipstick blending.
+2. Dudak sınırında feather/blur iyileştirmesi.
+3. Eyeliner / eyeshadow ekleme.
+4. Contour / highlight ekleme.
+5. Cilt smoothing’i daha doğal hale getirme.
+6. Teeth whitening ekleme.
+7. Frontend renk paletiyle bağlama.
+```
+
+Eksikler:
+
+```text
+- makyajın cilt ışığına göre adapte olması
+- dudak texture koruma
+- parlamayı koruma
+- farklı ten renklerinde renk kalibrasyonu
+- AI tabanlı makeup refinement modeli
+```
+
+`makeup_model` slotu var ama şu an boş. İleride lokal bir makeup refinement modeli eklenirse şuraya bağlanmalı:
+
+```text
+backend/local_models/custom_plugins/makeup_model.py
+```
+
+---
+
+## Expression Ekibi Ne Yapacak?
+
+Şu an expression tarafında iki katman var:
+
+```text
+1. Classical warp / geometry effects
+2. LivePortrait model slotu
+```
+
+LivePortrait repo ve weights setup script ile hazırlanabiliyor. Ama şu an full inference bridge yok.
+
+Expression ekibinin işi:
+
+```text
+1. LivePortrait runtime bridge yazmak.
+2. Driving motion template desteği eklemek.
+3. Smile / eyebrow raise / surprise gibi presetler hazırlamak.
+4. Output image veya video formatını belirlemek.
+5. Frontend’den expression preset seçtirmek.
+```
+
+Eksikler:
+
+```text
+- tek fotoğrafta doğal expression değişimi
+- identity korunumu
+- artifact temizleme
+- ağız/diş bölgesi tutarlılığı
+- göz kırpma / kaş hareketi kontrolü
+```
+
+Profesyonel FaceApp seviyesinde expression için sadece landmark warp yetmez. Generative model gerekir. Bu yüzden LivePortrait mantıklı ama bridge işi ayrı geliştirme ister.
+
+---
+
+## Aging Ekibi Ne Yapacak?
+
+Aging için SAM seçildi:
+
+```text
+SAM - Style-based Age Manipulation
+```
+
+Şu an:
+
+```text
+- repo standardı hazır
+- weight path hazır
+- plugin slot hazır
+- validator geçiyor
+- full inference bridge yok
+```
+
+Aging ekibinin işi:
+
+```text
+1. SAM runtime bridge yazmak.
+2. Target age / age direction parametresi tanımlamak.
+3. Input crop / align işlemini doğru yapmak.
+4. Output’u orijinal fotoğrafa geri blend etmek.
+5. Identity korunumu test etmek.
+6. Face restore ile postprocess eklemek.
+```
+
+Frontend için önerilen param:
+
+```json
+{
+  "aging_model": {
+    "enabled": true,
+    "target_age": 55,
+    "intensity": 0.8
+  }
+}
+```
+
+Eksikler:
+
+```text
+- gerçek SAM inference
+- face crop alignment
+- generated face’i orijinal image’e seamless paste etme
+- saç/sakal/arka plan uyumu
+- yaşlandırma artifact temizleme
+```
+
+---
+
+## 3D Ekibi Ne Yapacak?
+
+Mevcut 3D durum:
+
+```text
+DECA / FLAME çalışıyor.
+vertices: 5023
+faces: 9976
+renderer kapalı.
+PyTorch3D zorunlu değil.
+```
+
+3D ekibinin işi:
+
+```text
+1. DECA mesh export eklemek.
+2. Mesh tabanlı reshape algoritmaları geliştirmek.
+3. Nose / jaw / cheek / face slimming için region mapping yapmak.
+4. Renderer opsiyonunu araştırmak.
+5. Depth map / occlusion üretmek.
+6. AlbedoGAN gibi future providerları araştırmak.
+```
+
+AlbedoGAN tarafı şimdilik sadece status slot:
+
+```text
+backend/local_models/albedogan_3d.py
+```
+
+Aktif pipeline’a bağlanmadı. Windows clone problemi olduğu için şimdilik zorlanmamalı.
+
+---
+
+# FaceApp Seviyesine Göre Eksikler
+
+Dürüst durum:
+
+```text
+Bu proje şu an FaceApp seviyesinde değil.
+```
+
+FaceApp seviyesinde bir sistem için gereken ama bizde henüz tam olmayan şeyler:
+
+## 1. Gerçek generative face editing
+
+FaceApp tarzı efektler genelde sadece landmark warp değildir.
+
+Gerekenler:
+
+```text
+- identity preserving generative model
+- aging/de-aging model
+- expression model
+- makeup transfer/refinement model
+- face restoration model
+- artifact removal
+```
+
+Bizde durum:
+
+```text
+- slotlar hazır
+- weightler hazır
+- bazı temel effectler hazır
+- full inference bridge çoğunda yok
+```
+
+## 2. Seamless blending
+
+Profesyonel sonuç için generated yüzü orijinal fotoğrafa doğal yapıştırmak gerekir.
+
+Eksik parçalar:
+
+```text
+- face crop align
+- inverse transform
+- Poisson blending veya advanced alpha blending
+- skin color correction
+- lighting match
+- background preservation
+```
+
+## 3. Occlusion handling
+
+Aksesuar/makyajda önemli:
+
+```text
+- saç önde mi arkada mı?
+- küpe saçın arkasında mı?
+- kolye çenenin altında mı?
+- gözlük camı göz üstüne nasıl oturuyor?
+```
+
+Bizde:
+
+```text
+- anchor sistemi var
+- maskeler var
+- gerçek depth ordering henüz yok
+```
+
+## 4. Multi-pose robustness
+
+FaceApp tarzı uygulamalar farklı pozlarda çalışmalı:
+
+```text
+- önden yüz
+- hafif yan yüz
+- düşük ışık
+- gözlük/saç kapatma
+- düşük kalite fotoğraf
+```
+
+Bizde:
+
+```text
+- MediaPipe stabil
+- DECA var
+- ama pose-specific asset fitting ve robust fallback eksik
+```
+
+## 5. Model optimization
+
+Profesyonel app için hız gerekir.
+
+Eksikler:
+
+```text
+- GPU inference optimization
+- model caching
+- lazy loading
+- async queue
+- batch/test pipeline
+- memory limit yönetimi
+```
+
+Şu an CPU’da bazı şeyler çalışır ama SAM/LivePortrait gibi modeller ağır olabilir.
+
+## 6. Frontend UX
+
+FaceApp seviyesinde his için frontend çok önemli:
+
+```text
+- hızlı preview
+- loading state
+- effect intensity slider
+- undo/redo
+- before/after compare
+- preset thumbnails
+- asset marketplace/selector
+```
+
+Backend core olsa bile UX zayıfsa ürün kötü görünür.
+
+---
+
+# Şu An Teslim Edilebilir Olan
+
+Bu branch şu şekilde teslim edilmeli:
+
+```text
+Core foundation branch
+```
+
+Teslim açıklaması:
+
+```text
+Bu branch, FaceWarp Lab için local-only AI face editing core altyapısını sağlar.
+MediaPipe anchor, BiSeNet parsing, DECA/FLAME true 3D mesh, accessory engine,
+beauty hooks, model slots, SAM/LivePortrait setup ve plugin validator eklendi.
+Full FaceApp-level generative inference henüz tamamlanmadı; ilgili modeller için
+slot ve setup altyapısı hazırlandı.
+```
+
+---
+
+# Senin Şu An Yapacağın Son İşler
+
+Push öncesi sıralama:
+
+```text
+1. face_parsing.py path kontrolü
+2. README.md ekleme
+3. .gitignore final kontrol
+4. local_models içeriği git’e girmiyor mu kontrol
+5. debug jpg/png dosyaları git’e girmiyor mu kontrol
+6. uvicorn açılıyor mu kontrol
+7. /api/upload çalışıyor mu kontrol
+8. /api/process çalışıyor mu kontrol
+9. test_deca_debug çalışıyor mu kontrol
+10. test_accessory_engine çalışıyor mu kontrol
+11. plugin validator valid mi kontrol
+```
+
+Komutlar:
+
+```powershell
+python -m py_compile backend\main.py
+python -m py_compile backend\face_detection.py
+python -m py_compile backend\face_analysis.py
+python -m py_compile backend\face_parsing.py
+python -m py_compile backend\effect_engine.py
+python -m py_compile backend\photo_pipeline.py
+python -m py_compile backend\register_default_effects.py
+python -m py_compile backend\three_d\deca_runtime.py
+python -m py_compile backend\three_d\deca_provider.py
+python -m py_compile backend\accessory_engine.py
+
+python -m backend.test_deca_debug
+python -m backend.test_accessory_engine
+
+python -c "from backend.local_models.plugin_validator import validate_all_plugins; import json; print(json.dumps(validate_all_plugins(), indent=2))"
+
+uvicorn backend.main:app --reload
+```
+
+Git kontrol:
+
+```powershell
+git status --short --untracked-files=all local_models
+```
+
+Sadece şu görünmeli:
+
+```text
+?? local_models/.gitkeep
+```
+
+Sonra:
+
+```powershell
+git add .gitignore
+git add README.md
+git add scripts\setup_models.ps1
+git add local_models\.gitkeep
+git add face_landmarker.task
+git add backend
+git add frontend
+git add requirements.txt
+```
+
+Son kontrol:
+
+```powershell
+git status --short
+```
+
+Büyük model dosyası görünmüyorsa commit atılabilir.
+
+---
+
+# Sonraki Sprint Önerisi
+
+## Sprint 1 — Stabil teslim
+
+```text
+- README
+- .gitignore
+- setup script
+- legacy frontend compatibility
+- face_parsing path fix
+- cleanup
+```
+
+## Sprint 2 — Görsel kalite
+
+```text
+- accessory asset presets
+- better necklace / earring offsets
+- occlusion masks
+- lipstick/blush quality
+- hair color quality
+```
+
+## Sprint 3 — AI inference
+
+```text
+- SAM aging bridge
+- LivePortrait expression bridge
+- face restoration postprocess
+```
+
+## Sprint 4 — FaceApp’e yaklaşma
+
+```text
+- seamless blending
+- identity preservation
+- generated face paste-back
+- lighting/color correction
+- GPU optimization
+- production frontend UX
+```
+
+Bu plan gerçekçi. Şu an yaptığımız iş boşa değil; ama FaceApp seviyesine gelmek için core’dan sonra asıl zaman generative inference, blending ve UX tarafında harcanacak.

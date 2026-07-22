@@ -1,0 +1,3140 @@
+{
+    "version": 1,
+    "local_only": true,
+    "schema": "facewarp_store_manifest_v1",
+    "slots": {
+        "upperbody": {
+            "label": "Upper Body",
+            "type": "garment",
+            "provider": "ootdiffusion",
+            "conflicts": [
+                "dress"
+            ],
+            "required_fit": [
+                "front_product_image",
+                "clean_background",
+                "full_garment_visible"
+            ]
+        },
+        "lowerbody": {
+            "label": "Lower Body",
+            "type": "garment",
+            "provider": "ootdiffusion",
+            "conflicts": [
+                "dress"
+            ],
+            "required_fit": [
+                "front_product_image",
+                "clean_background",
+                "full_garment_visible"
+            ]
+        },
+        "dress": {
+            "label": "Dress",
+            "type": "garment",
+            "provider": "ootdiffusion",
+            "conflicts": [
+                "upperbody",
+                "lowerbody"
+            ],
+            "required_fit": [
+                "front_product_image",
+                "clean_background",
+                "full_garment_visible"
+            ]
+        },
+        "hat": {
+            "label": "Hat",
+            "type": "accessory",
+            "provider": "accessory_overlay",
+            "conflicts": [],
+            "required_fit": [
+                "transparent_png",
+                "object_tightly_cropped"
+            ]
+        },
+        "glasses": {
+            "label": "Glasses",
+            "type": "accessory",
+            "provider": "accessory_overlay",
+            "conflicts": [],
+            "required_fit": [
+                "transparent_png",
+                "lens_anchor_metadata_preferred"
+            ]
+        },
+        "earrings": {
+            "label": "Earrings",
+            "type": "accessory",
+            "provider": "accessory_overlay",
+            "conflicts": [],
+            "required_fit": [
+                "transparent_png",
+                "pivot_anchor_metadata_preferred"
+            ]
+        },
+        "necklace": {
+            "label": "Necklace",
+            "type": "accessory",
+            "provider": "accessory_overlay",
+            "conflicts": [],
+            "required_fit": [
+                "transparent_png_or_physics_reference"
+            ]
+        },
+        "hair_clip": {
+            "label": "Hair Clip",
+            "type": "accessory",
+            "provider": "accessory_overlay",
+            "conflicts": [],
+            "required_fit": [
+                "transparent_png",
+                "object_tightly_cropped"
+            ]
+        }
+    },
+    "quality_contract": {
+        "garment_images": {
+            "accepted_extensions": [
+                ".jpeg",
+                ".jpg",
+                ".png",
+                ".webp"
+            ],
+            "requirements": [
+                "single front-facing garment product image",
+                "no model body in the garment image",
+                "full garment visible without crop",
+                "prefer plain or transparent background",
+                "minimum recommended long edge 768px"
+            ]
+        },
+        "accessory_images": {
+            "accepted_extensions": [
+                ".png"
+            ],
+            "requirements": [
+                "transparent PNG",
+                "tight crop around visible object",
+                "manifest fit_profile includes anchor and scale hints when needed"
+            ]
+        }
+    },
+    "items": [
+        {
+            "id": "cc0_lowerbody_01",
+            "name": "CC0 Lowerbody 01 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_01.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_01.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "c362d096-021d-4948-81ef-c2a971dc0998.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.7423,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.3255,
+                    "bbox_area_ratio": 0.4392,
+                    "solidity": 0.7413,
+                    "aspect": 0.5533,
+                    "background_simple": 0.6792,
+                    "centered": 0.9661,
+                    "score": 5.7423
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        71,
+                        47,
+                        343,
+                        506
+                    ],
+                    "foreground_ratio": 0.3175702247191011
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_02",
+            "name": "CC0 Lowerbody 02 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_02.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_02.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "da1d3568-0e88-4dea-88f4-ab910b0a59e1.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4834,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.378,
+                    "bbox_area_ratio": 0.5699,
+                    "solidity": 0.6633,
+                    "aspect": 0.5972,
+                    "background_simple": 0.5344,
+                    "centered": 0.9133,
+                    "score": 5.4834
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        60,
+                        35,
+                        376,
+                        531
+                    ],
+                    "foreground_ratio": 0.3674765917602996
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_03",
+            "name": "CC0 Lowerbody 03 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_03.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_03.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "2d88dcfb-2418-49fa-82b2-b5d4500ed542.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.3517,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3921,
+                    "bbox_area_ratio": 0.589,
+                    "solidity": 0.6657,
+                    "aspect": 0.5928,
+                    "background_simple": 0.2929,
+                    "centered": 0.9712,
+                    "score": 5.3517
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        41,
+                        16,
+                        357,
+                        516
+                    ],
+                    "foreground_ratio": 0.3825797373358349
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_04",
+            "name": "CC0 Lowerbody 04 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_04.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_04.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "bb336291-dc5d-442d-91f8-fcdf6cd258a4.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.3451,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.3671,
+                    "bbox_area_ratio": 0.5673,
+                    "solidity": 0.6471,
+                    "aspect": 0.6866,
+                    "background_simple": 0.4686,
+                    "centered": 0.9046,
+                    "score": 5.3451
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        43,
+                        25,
+                        378,
+                        490
+                    ],
+                    "foreground_ratio": 0.35674625468164795
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_05",
+            "name": "CC0 Lowerbody 05 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_05.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_05.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "a3e47bc3-ba2d-480d-a2bd-1c9d2c96abd8.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.2908,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.3446,
+                    "bbox_area_ratio": 0.5783,
+                    "solidity": 0.5959,
+                    "aspect": 0.7436,
+                    "background_simple": 0.6268,
+                    "centered": 0.8398,
+                    "score": 5.2908
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        38,
+                        92,
+                        387,
+                        534
+                    ],
+                    "foreground_ratio": 0.33530898876404497
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_06",
+            "name": "CC0 Lowerbody 06 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_06.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_06.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "e3229e00-607a-4172-86b0-7205ac0c15fa.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.2889,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.3788,
+                    "bbox_area_ratio": 0.6565,
+                    "solidity": 0.5769,
+                    "aspect": 0.7009,
+                    "background_simple": 0.5555,
+                    "centered": 0.9424,
+                    "score": 5.2889
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        33,
+                        31,
+                        392,
+                        525
+                    ],
+                    "foreground_ratio": 0.36852059925093633
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_07",
+            "name": "CC0 Lowerbody 07 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_07.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_07.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "ee6e5a32-db5d-4a02-b46b-9804738ade9e.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.288,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.3874,
+                    "bbox_area_ratio": 0.5567,
+                    "solidity": 0.696,
+                    "aspect": 0.6114,
+                    "background_simple": 0.4373,
+                    "centered": 0.8558,
+                    "score": 5.288
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        23,
+                        1,
+                        349,
+                        531
+                    ],
+                    "foreground_ratio": 0.3855524344569288
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_08",
+            "name": "CC0 Lowerbody 08 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_08.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_08.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "93a6f341-bdd7-4feb-88b6-8de1512ba7df.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.2628,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.4062,
+                    "bbox_area_ratio": 0.6493,
+                    "solidity": 0.6256,
+                    "aspect": 0.7822,
+                    "background_simple": 0.5824,
+                    "centered": 0.9031,
+                    "score": 5.2628
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        32,
+                        37,
+                        400,
+                        506
+                    ],
+                    "foreground_ratio": 0.3977908067542214
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_09",
+            "name": "CC0 Lowerbody 09 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_09.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_09.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "9f0338d5-37b9-4837-964d-d68fa08cec3b.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.2607,
+                "metrics": {
+                    "width": 400,
+                    "height": 711,
+                    "foreground_ratio": 0.3818,
+                    "bbox_area_ratio": 0.4615,
+                    "solidity": 0.8272,
+                    "aspect": 0.5193,
+                    "background_simple": 0.6185,
+                    "centered": 0.9582,
+                    "score": 5.2607
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        711
+                    ],
+                    "crop_box": [
+                        28,
+                        93,
+                        354,
+                        653
+                    ],
+                    "foreground_ratio": 0.3729957805907173
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_10",
+            "name": "CC0 Lowerbody 10 Shorts",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_10.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_10.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "shorts",
+            "source_filename": "9bc8554c-b0b1-4362-b4ec-783c2ecfcdbd.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.2475,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.3229,
+                    "bbox_area_ratio": 0.4481,
+                    "solidity": 0.7205,
+                    "aspect": 1.2576,
+                    "background_simple": 0.6863,
+                    "centered": 0.9538,
+                    "score": 5.2475
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        4,
+                        129,
+                        400,
+                        455
+                    ],
+                    "foreground_ratio": 0.3150280898876405
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_11",
+            "name": "CC0 Lowerbody 11 Shorts",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_11.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_11.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "shorts",
+            "source_filename": "97620b7f-54ba-445a-9817-b39c8684f890.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.1979,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.3799,
+                    "bbox_area_ratio": 0.591,
+                    "solidity": 0.6428,
+                    "aspect": 1.0238,
+                    "background_simple": 0.5684,
+                    "centered": 0.9623,
+                    "score": 5.1979
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        5,
+                        76,
+                        400,
+                        476
+                    ],
+                    "foreground_ratio": 0.37165262172284647
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_12",
+            "name": "CC0 Lowerbody 12 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_12.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_12.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "2f03be8f-7053-4b94-b619-d5166b34ef3f.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.1892,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3661,
+                    "bbox_area_ratio": 0.6366,
+                    "solidity": 0.5752,
+                    "aspect": 0.7095,
+                    "background_simple": 0.5264,
+                    "centered": 0.8733,
+                    "score": 5.1892
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        45,
+                        14,
+                        397,
+                        501
+                    ],
+                    "foreground_ratio": 0.36094277673545966
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_13",
+            "name": "CC0 Lowerbody 13 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_13.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_13.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "38dbb71c-2e31-4f17-af08-90719ad818d0.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.173,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.4823,
+                    "bbox_area_ratio": 0.6203,
+                    "solidity": 0.7776,
+                    "aspect": 0.6099,
+                    "background_simple": 0.4437,
+                    "centered": 0.9178,
+                    "score": 5.173
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        44,
+                        2,
+                        376,
+                        519
+                    ],
+                    "foreground_ratio": 0.4731647940074906
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_14",
+            "name": "CC0 Lowerbody 14 Skirt",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_14.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_14.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "skirt",
+            "source_filename": "7ec3c84f-6c41-40bf-8248-f89846c6be6c.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.16,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.2831,
+                    "bbox_area_ratio": 0.3979,
+                    "solidity": 0.7116,
+                    "aspect": 1.2927,
+                    "background_simple": 0.6464,
+                    "centered": 0.9929,
+                    "score": 5.16
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        12,
+                        126,
+                        395,
+                        426
+                    ],
+                    "foreground_ratio": 0.2795356472795497
+                }
+            }
+        },
+        {
+            "id": "cc0_lowerbody_15",
+            "name": "CC0 Lowerbody 15 Pants",
+            "type": "garment",
+            "category": "lowerbody",
+            "slot": "lowerbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/lowerbody/cc0_lowerbody_15.png",
+            "tryon_image": "assets/store/garments/lowerbody/cc0_lowerbody_15.png",
+            "model_type": "dc",
+            "tryon_category": "lowerbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "pants",
+            "source_filename": "c8d21106-bbdb-4e8d-83e4-bf3d14e54c16.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.151,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.4133,
+                    "bbox_area_ratio": 0.5998,
+                    "solidity": 0.6891,
+                    "aspect": 0.6588,
+                    "background_simple": 0.3888,
+                    "centered": 0.8636,
+                    "score": 5.151
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "lowerbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        23,
+                        3,
+                        361,
+                        531
+                    ],
+                    "foreground_ratio": 0.41217696629213485
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_01",
+            "name": "CC0 Dress 01 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_01.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_01.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "009b3c31-fb62-45c0-be9a-37a5c238cb88.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4495,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.4377,
+                    "bbox_area_ratio": 0.5043,
+                    "solidity": 0.868,
+                    "aspect": 0.4198,
+                    "background_simple": 0.5517,
+                    "centered": 0.9582,
+                    "score": 5.4495
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        75,
+                        3,
+                        340,
+                        533
+                    ],
+                    "foreground_ratio": 0.4317401500938086
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_02",
+            "name": "CC0 Dress 02 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_02.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_02.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "2b66fdb1-33dd-445f-a422-b17fbe543483.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.409,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3311,
+                    "bbox_area_ratio": 0.5285,
+                    "solidity": 0.6266,
+                    "aspect": 0.712,
+                    "background_simple": 0.6623,
+                    "centered": 0.8566,
+                    "score": 5.409
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        56,
+                        30,
+                        388,
+                        479
+                    ],
+                    "foreground_ratio": 0.3240337711069418
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_03",
+            "name": "CC0 Dress 03 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_03.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_03.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "19e4de0d-fb90-47c2-83b4-37e3652c5a16.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.3001,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3316,
+                    "bbox_area_ratio": 0.4106,
+                    "solidity": 0.8075,
+                    "aspect": 0.6667,
+                    "background_simple": 0.6552,
+                    "centered": 0.8182,
+                    "score": 5.3001
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        53,
+                        26,
+                        343,
+                        434
+                    ],
+                    "foreground_ratio": 0.3273827392120075
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_04",
+            "name": "CC0 Dress 04 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_04.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_04.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "a65dc730-f117-4a1a-8fe9-917fad90a167.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.2724,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3127,
+                    "bbox_area_ratio": 0.4845,
+                    "solidity": 0.6455,
+                    "aspect": 0.9074,
+                    "background_simple": 0.676,
+                    "centered": 0.9013,
+                    "score": 5.2724
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        36,
+                        63,
+                        390,
+                        445
+                    ],
+                    "foreground_ratio": 0.30875234521575984
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_05",
+            "name": "CC0 Dress 05 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_05.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_05.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "1da10477-cb53-4506-b54c-1ad949002e35.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.178,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.358,
+                    "bbox_area_ratio": 0.4844,
+                    "solidity": 0.7392,
+                    "aspect": 0.6458,
+                    "background_simple": 0.4489,
+                    "centered": 0.7791,
+                    "score": 5.178
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        62,
+                        51,
+                        369,
+                        443
+                    ],
+                    "foreground_ratio": 0.3296857410881801
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_06",
+            "name": "CC0 Dress 06 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_06.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_06.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "123cedc9-f0ee-432b-a087-7c4981e60c75.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.146,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.5193,
+                    "bbox_area_ratio": 0.6242,
+                    "solidity": 0.832,
+                    "aspect": 0.5508,
+                    "background_simple": 0.4649,
+                    "centered": 0.921,
+                    "score": 5.146
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        18,
+                        17,
+                        345,
+                        533
+                    ],
+                    "foreground_ratio": 0.5174202626641651
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_07",
+            "name": "CC0 Dress 07 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_07.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_07.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "16740066-3329-4165-884a-25c42814d590.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.0699,
+                "metrics": {
+                    "width": 400,
+                    "height": 400,
+                    "foreground_ratio": 0.449,
+                    "bbox_area_ratio": 0.6281,
+                    "solidity": 0.7149,
+                    "aspect": 0.6534,
+                    "background_simple": 0.4117,
+                    "centered": 0.8545,
+                    "score": 5.0699
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        400
+                    ],
+                    "crop_box": [
+                        29,
+                        0,
+                        322,
+                        400
+                    ],
+                    "foreground_ratio": 0.4456875
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_08",
+            "name": "CC0 Dress 08 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_08.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_08.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "1c22dfec-9633-4d10-88f5-b6cad5b27dfc.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.0271,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3532,
+                    "bbox_area_ratio": 0.5203,
+                    "solidity": 0.6788,
+                    "aspect": 1.0645,
+                    "background_simple": 0.6309,
+                    "centered": 0.8096,
+                    "score": 5.0271
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        15,
+                        46,
+                        400,
+                        415
+                    ],
+                    "foreground_ratio": 0.3500891181988743
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_09",
+            "name": "CC0 Dress 09 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_09.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_09.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "92f5cc49-20c0-4b60-a206-9f26e4b736a7.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.0121,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.4457,
+                    "bbox_area_ratio": 0.5859,
+                    "solidity": 0.7607,
+                    "aspect": 0.7812,
+                    "background_simple": 0.4457,
+                    "centered": 0.8954,
+                    "score": 5.0121
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        26,
+                        28,
+                        383,
+                        470
+                    ],
+                    "foreground_ratio": 0.434015009380863
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_10",
+            "name": "CC0 Dress 10 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_10.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_10.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "3f844e1e-4a00-4b64-8c1d-3b847191bf11.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 4.9986,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.4339,
+                    "bbox_area_ratio": 0.6301,
+                    "solidity": 0.6887,
+                    "aspect": 0.8624,
+                    "background_simple": 0.3733,
+                    "centered": 0.9624,
+                    "score": 4.9986
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        12,
+                        39,
+                        392,
+                        488
+                    ],
+                    "foreground_ratio": 0.42433520599250935
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_11",
+            "name": "CC0 Dress 11 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_11.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_11.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "2adf987d-a985-4023-81d4-adf9368ca251.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 4.9454,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.4964,
+                    "bbox_area_ratio": 0.6439,
+                    "solidity": 0.7709,
+                    "aspect": 0.7109,
+                    "background_simple": 0.3252,
+                    "centered": 0.9491,
+                    "score": 4.9454
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        21,
+                        14,
+                        377,
+                        533
+                    ],
+                    "foreground_ratio": 0.5013367729831144
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_12",
+            "name": "CC0 Dress 12 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_12.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_12.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "22cc2840-9a64-4d9f-8dbe-00e81fa4b2c1.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 4.8608,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.4246,
+                    "bbox_area_ratio": 0.7968,
+                    "solidity": 0.5329,
+                    "aspect": 0.8551,
+                    "background_simple": 0.5112,
+                    "centered": 0.9514,
+                    "score": 4.8608
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        0,
+                        13,
+                        400,
+                        514
+                    ],
+                    "foreground_ratio": 0.4400984990619137
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_13",
+            "name": "CC0 Dress 13 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_13.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_13.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "08868e1e-e19a-43de-b883-82694af5a482.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 4.8336,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.5885,
+                    "bbox_area_ratio": 0.8041,
+                    "solidity": 0.7318,
+                    "aspect": 0.6078,
+                    "background_simple": 0.402,
+                    "centered": 0.8917,
+                    "score": 4.8336
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        38,
+                        0,
+                        400,
+                        533
+                    ],
+                    "foreground_ratio": 0.5813696060037523
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_14",
+            "name": "CC0 Dress 14 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_14.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_14.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "7a80fe51-8dfd-4e62-a65a-b192365731fa.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 4.8308,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.4156,
+                    "bbox_area_ratio": 0.6337,
+                    "solidity": 0.6558,
+                    "aspect": 1.0171,
+                    "background_simple": 0.345,
+                    "centered": 0.9081,
+                    "score": 4.8308
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        6,
+                        55,
+                        400,
+                        464
+                    ],
+                    "foreground_ratio": 0.3814258911819887
+                }
+            }
+        },
+        {
+            "id": "cc0_dress_15",
+            "name": "CC0 Dress 15 Dress",
+            "type": "garment",
+            "category": "dress",
+            "slot": "dress",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/dress/cc0_dress_15.png",
+            "tryon_image": "assets/store/garments/dress/cc0_dress_15.png",
+            "model_type": "dc",
+            "tryon_category": "dress",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "dress",
+            "source_filename": "cbf45350-1a65-4cec-abad-0f64a4a459eb.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 4.807,
+                "metrics": {
+                    "width": 400,
+                    "height": 487,
+                    "foreground_ratio": 0.53,
+                    "bbox_area_ratio": 0.7503,
+                    "solidity": 0.7064,
+                    "aspect": 0.9234,
+                    "background_simple": 0.4789,
+                    "centered": 0.9285,
+                    "score": 4.807
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "dress",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        487
+                    ],
+                    "crop_box": [
+                        10,
+                        35,
+                        400,
+                        474
+                    ],
+                    "foreground_ratio": 0.5225
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_02",
+            "name": "CC0 Upperbody 02 T-Shirt",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_02.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_02.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "t-shirt",
+            "source_filename": "7faa589f-aa4d-4402-84cf-520138c45db1.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.561,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3587,
+                    "bbox_area_ratio": 0.4854,
+                    "solidity": 0.7391,
+                    "aspect": 0.9557,
+                    "background_simple": 0.6352,
+                    "centered": 0.8576,
+                    "score": 5.561
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        18,
+                        54,
+                        381,
+                        426
+                    ],
+                    "foreground_ratio": 0.3530675422138837
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_06",
+            "name": "CC0 Upperbody 06 T-Shirt",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_06.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_06.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "t-shirt",
+            "source_filename": "27983c13-54bf-463d-84a6-94ec799b70ab.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4625,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3841,
+                    "bbox_area_ratio": 0.4858,
+                    "solidity": 0.7908,
+                    "aspect": 0.6755,
+                    "background_simple": 0.5012,
+                    "centered": 0.96,
+                    "score": 5.4625
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        37,
+                        53,
+                        348,
+                        492
+                    ],
+                    "foreground_ratio": 0.37808161350844277
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_11",
+            "name": "CC0 Upperbody 11 T-Shirt",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_11.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_11.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "t-shirt",
+            "source_filename": "c5371dda-ab7d-4bfc-9b5b-275c579e3f94.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4077,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3893,
+                    "bbox_area_ratio": 0.598,
+                    "solidity": 0.651,
+                    "aspect": 1.0539,
+                    "background_simple": 0.5572,
+                    "centered": 0.8895,
+                    "score": 5.4077
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        7,
+                        59,
+                        400,
+                        530
+                    ],
+                    "foreground_ratio": 0.3902016885553471
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_13",
+            "name": "CC0 Upperbody 13 T-Shirt",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_13.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_13.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "t-shirt",
+            "source_filename": "f968404d-6c3a-465e-9edd-347784880455.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.3687,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3047,
+                    "bbox_area_ratio": 0.3896,
+                    "solidity": 0.782,
+                    "aspect": 0.8289,
+                    "background_simple": 0.3898,
+                    "centered": 0.9424,
+                    "score": 5.3687
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        43,
+                        107,
+                        360,
+                        459
+                    ],
+                    "foreground_ratio": 0.30315666041275796
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_14",
+            "name": "CC0 Upperbody 14 T-Shirt",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_14.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_14.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "t-shirt",
+            "source_filename": "e44b1445-0f43-4387-a8d6-e9c2d46de5ec.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.3564,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3876,
+                    "bbox_area_ratio": 0.5532,
+                    "solidity": 0.7007,
+                    "aspect": 1.0755,
+                    "background_simple": 0.4782,
+                    "centered": 0.9055,
+                    "score": 5.3564
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        11,
+                        68,
+                        400,
+                        447
+                    ],
+                    "foreground_ratio": 0.3802157598499062
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_09",
+            "name": "CC0 Upperbody 09 Shirt",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_09.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_09.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "shirt",
+            "source_filename": "5089843a-ecf8-4cb6-8f35-587f19125046.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4339,
+                "metrics": {
+                    "width": 400,
+                    "height": 503,
+                    "foreground_ratio": 0.3856,
+                    "bbox_area_ratio": 0.5354,
+                    "solidity": 0.7203,
+                    "aspect": 1.0305,
+                    "background_simple": 0.4829,
+                    "centered": 0.9163,
+                    "score": 5.4339
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        503
+                    ],
+                    "crop_box": [
+                        0,
+                        70,
+                        395,
+                        438
+                    ],
+                    "foreground_ratio": 0.37982604373757456
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_03",
+            "name": "CC0 Upperbody 03 Longsleeve",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_03.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_03.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "longsleeve",
+            "source_filename": "3723b671-6846-4d22-af73-fc655eb52093.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.5556,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3191,
+                    "bbox_area_ratio": 0.5238,
+                    "solidity": 0.6092,
+                    "aspect": 0.9573,
+                    "background_simple": 0.679,
+                    "centered": 0.8653,
+                    "score": 5.5556
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        19,
+                        50,
+                        394,
+                        435
+                    ],
+                    "foreground_ratio": 0.31302532833020635
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_04",
+            "name": "CC0 Upperbody 04 Longsleeve",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_04.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_04.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "longsleeve",
+            "source_filename": "49431f72-6423-4fd9-953b-d55bf8f4830a.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4822,
+                "metrics": {
+                    "width": 400,
+                    "height": 455,
+                    "foreground_ratio": 0.3467,
+                    "bbox_area_ratio": 0.4497,
+                    "solidity": 0.771,
+                    "aspect": 1.051,
+                    "background_simple": 0.6491,
+                    "centered": 0.8121,
+                    "score": 5.4822
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        455
+                    ],
+                    "crop_box": [
+                        66,
+                        56,
+                        399,
+                        373
+                    ],
+                    "foreground_ratio": 0.34005494505494505
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_12",
+            "name": "CC0 Upperbody 12 Longsleeve",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_12.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_12.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "longsleeve",
+            "source_filename": "ded0c4cd-d106-4e54-a61f-c08da89d9a8d.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.3876,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3315,
+                    "bbox_area_ratio": 0.4563,
+                    "solidity": 0.7265,
+                    "aspect": 1.4127,
+                    "background_simple": 0.5687,
+                    "centered": 0.9511,
+                    "score": 5.3876
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        0,
+                        111,
+                        400,
+                        413
+                    ],
+                    "foreground_ratio": 0.32153846153846155
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_01",
+            "name": "CC0 Upperbody 01 Outwear",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_01.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_01.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "outwear",
+            "source_filename": "ba7624a3-d953-4a17-9003-61f350f5785b.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.6083,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3478,
+                    "bbox_area_ratio": 0.535,
+                    "solidity": 0.6501,
+                    "aspect": 1.1382,
+                    "background_simple": 0.5856,
+                    "centered": 0.9898,
+                    "score": 5.6083
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        0,
+                        95,
+                        397,
+                        457
+                    ],
+                    "foreground_ratio": 0.3370544090056285
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_05",
+            "name": "CC0 Upperbody 05 Outwear",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_05.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_05.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "outwear",
+            "source_filename": "b8f3af98-e650-4f59-a3f3-513a1c5ec418.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4744,
+                "metrics": {
+                    "width": 400,
+                    "height": 467,
+                    "foreground_ratio": 0.3787,
+                    "bbox_area_ratio": 0.635,
+                    "solidity": 0.5964,
+                    "aspect": 1.1236,
+                    "background_simple": 0.6049,
+                    "centered": 0.9666,
+                    "score": 5.4744
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        467
+                    ],
+                    "crop_box": [
+                        4,
+                        55,
+                        400,
+                        419
+                    ],
+                    "foreground_ratio": 0.37018201284796576
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_07",
+            "name": "CC0 Upperbody 07 Outwear",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_07.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_07.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "outwear",
+            "source_filename": "f1784f1b-61c7-4bd8-9799-3bed700857bb.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4608,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.4445,
+                    "bbox_area_ratio": 0.5873,
+                    "solidity": 0.7568,
+                    "aspect": 0.9595,
+                    "background_simple": 0.5539,
+                    "centered": 0.9737,
+                    "score": 5.4608
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        9,
+                        74,
+                        400,
+                        482
+                    ],
+                    "foreground_ratio": 0.43874531835205993
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_08",
+            "name": "CC0 Upperbody 08 Outwear",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_08.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_08.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "outwear",
+            "source_filename": "172a91db-cadc-4c64-85bb-4ac704ea686d.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4407,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3171,
+                    "bbox_area_ratio": 0.464,
+                    "solidity": 0.6834,
+                    "aspect": 1.4365,
+                    "background_simple": 0.6129,
+                    "centered": 0.9947,
+                    "score": 5.4407
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        0,
+                        124,
+                        400,
+                        434
+                    ],
+                    "foreground_ratio": 0.3101031894934334
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_10",
+            "name": "CC0 Upperbody 10 Outwear",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_10.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_10.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "outwear",
+            "source_filename": "fab99089-ea1a-4380-988a-e700bbe73d42.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.4335,
+                "metrics": {
+                    "width": 400,
+                    "height": 533,
+                    "foreground_ratio": 0.3194,
+                    "bbox_area_ratio": 0.5304,
+                    "solidity": 0.6023,
+                    "aspect": 1.0443,
+                    "background_simple": 0.4857,
+                    "centered": 0.9459,
+                    "score": 5.4335
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        533
+                    ],
+                    "crop_box": [
+                        0,
+                        94,
+                        393,
+                        454
+                    ],
+                    "foreground_ratio": 0.3104878048780488
+                }
+            }
+        },
+        {
+            "id": "cc0_upperbody_15",
+            "name": "CC0 Upperbody 15 Outwear",
+            "type": "garment",
+            "category": "upperbody",
+            "slot": "upperbody",
+            "pipeline": "virtual_tryon",
+            "provider": "ootdiffusion",
+            "enabled": true,
+            "thumbnail": "assets/store/garments/upperbody/cc0_upperbody_15.png",
+            "tryon_image": "assets/store/garments/upperbody/cc0_upperbody_15.png",
+            "model_type": "dc",
+            "tryon_category": "upperbody",
+            "license": "CC0-1.0",
+            "source": "https://github.com/alexeygrigorev/clothing-dataset-small",
+            "source_dataset_id": "alexeygrigorev_clothing_dataset_small_cc0",
+            "source_class": "outwear",
+            "source_filename": "efbc5815-d1d4-4d85-8df2-9d9caae4300b.jpg",
+            "asset_quality": {
+                "source": "alexeygrigorev_clothing_dataset_small_cc0",
+                "license": "CC0-1.0",
+                "background": "auto_removed",
+                "fit_ready": true,
+                "score": 5.3491,
+                "metrics": {
+                    "width": 400,
+                    "height": 534,
+                    "foreground_ratio": 0.4964,
+                    "bbox_area_ratio": 0.7684,
+                    "solidity": 0.646,
+                    "aspect": 0.9208,
+                    "background_simple": 0.5124,
+                    "centered": 0.9785,
+                    "score": 5.3491
+                },
+                "notes": [
+                    "Auto-selected from CC0 dataset by resolution, centered object, and simple background heuristics.",
+                    "Alpha/crop prepared locally for store preview and OOTDiffusion garment input."
+                ]
+            },
+            "fit_profile": {
+                "target_region": "upperbody",
+                "canonical_view": "front_product",
+                "mask_policy": "provider_generated",
+                "alpha_policy": "transparent_png_prepared",
+                "canvas_size": [
+                    768,
+                    768
+                ],
+                "scale_hint": 1.0,
+                "offset_x": 0.0,
+                "offset_y": 0.0,
+                "preprocess": {
+                    "source_size": [
+                        400,
+                        534
+                    ],
+                    "crop_box": [
+                        0,
+                        49,
+                        400,
+                        523
+                    ],
+                    "foreground_ratio": 0.47954588014981275
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FaceWarp Lab — Facial Image Warping & Aging Dashboard</title>
+    <meta name="description" content="An interactive academic dashboard for facial image warping, aging simulation, and morphometric analysis using landmark-based transformations." />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+        darkMode: 'class',
+        theme: {
+        extend: {
+        colors: {
+        brand: {
+        50:  '#f0f4ff',
+        100: '#dce6ff',
+        200: '#b9ccff',
+        300: '#85a8ff',
+        400: '#4d7bff',
+        500: '#1a52ff',
+        600: '#0033f5',
+        700: '#0026d1',
+        800: '#0020aa',
+        900: '#031c85',
+        950: '#010e52',
+        },
+        surface: {
+        900: '#0b0f1a',
+        800: '#111827',
+        700: '#1e2a3a',
+        600: '#253347',
+        500: '#2d3f55',
+        }
+        },
+        fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+        boxShadow: {
+        glass: '0 8px 32px rgba(0,0,0,0.45)',
+        glow:  '0 0 24px rgba(26,82,255,0.35)',
+        },
+        animation: {
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
+        'fade-in':    'fadeIn 0.4s ease-out both',
+        'slide-up':   'slideUp 0.4s ease-out both',
+        },
+        keyframes: {
+        fadeIn:  { from: { opacity: '0' }, to: { opacity: '1' } },
+        slideUp: { from: { opacity: '0', transform: 'translateY(12px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+        },
+        }
+        }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ——— Base ——— */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: #0b0f1a;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ——— Scrollbar ——— */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #253347;
+            border-radius: 3px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #1a52ff;
+            }
+
+        /* ——— Glassmorphism card ——— */
+        .glass {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.07);
+        }
+
+        /* ——— Custom range slider ——— */
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 9999px;
+            background: #1e2a3a;
+            outline: none;
+            cursor: pointer;
+        }
+
+            input[type=range]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #1a52ff;
+                border: 2px solid #4d7bff;
+                box-shadow: 0 0 8px rgba(26,82,255,0.6);
+                transition: transform 0.15s, box-shadow 0.15s;
+            }
+
+                input[type=range]::-webkit-slider-thumb:hover {
+                    transform: scale(1.25);
+                    box-shadow: 0 0 12px rgba(26,82,255,0.9);
+                }
+
+            input[type=range]::-moz-range-thumb {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #1a52ff;
+                border: 2px solid #4d7bff;
+            }
+
+        /* ——— Dropzone ——— */
+        #dropzone {
+            transition: border-color 0.25s, background 0.25s;
+        }
+
+            #dropzone.drag-over {
+                border-color: #1a52ff;
+                background: rgba(26,82,255,0.1);
+            }
+
+        /* ——— Landmark toggle ——— */
+        #landmark-toggle:checked + label .toggle-dot {
+            transform: translateX(20px);
+            background: #1a52ff;
+        }
+
+        #landmark-toggle:checked + label .toggle-track {
+            background: rgba(26,82,255,0.35);
+            border-color: #1a52ff;
+        }
+
+        /* ——— Grayscale toggle ——— */
+        #grayscale-toggle:checked + label .toggle-dot {
+            transform: translateX(20px);
+            background: #6b7280;
+        }
+
+        #grayscale-toggle:checked + label .toggle-track {
+            background: rgba(107,114,128,0.35);
+            border-color: #6b7280;
+        }
+
+        /* ——— Image stage ——— */
+        .img-stage {
+            width: 100%;
+            max-width: 512px;
+            height: 512px;
+            position: relative;
+            background: #111827;
+            border: 1px dashed #253347;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .img-stage img,
+            .img-stage canvas {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+        .img-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #4a5568;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        /* ——— Grayscale overlay transition ——— */
+        .img-stage .grayscale-overlay {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+            .img-stage .grayscale-overlay.visible {
+                opacity: 1;
+            }
+
+        /* ——— Process button ——— */
+        #btn-process {
+            background: linear-gradient(135deg, #1a52ff 0%, #0026d1 100%);
+            box-shadow: 0 0 20px rgba(26,82,255,0.45);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+            #btn-process:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 28px rgba(26,82,255,0.7);
+            }
+
+            #btn-process:disabled {
+                opacity: 0.45;
+                cursor: not-allowed;
+            }
+
+        /* ——— Metric badges ——— */
+        .metric-good {
+            color: #34d399;
+        }
+
+        .metric-warn {
+            color: #fbbf24;
+        }
+
+        .metric-bad {
+            color: #f87171;
+        }
+
+        /* ——— Analytics drawer ——— */
+        #analytics-drawer {
+            transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s;
+            overflow: hidden;
+        }
+
+            #analytics-drawer.collapsed {
+                max-height: 0;
+                opacity: 0;
+            }
+
+            #analytics-drawer.expanded {
+                max-height: 900px;
+                opacity: 1;
+            }
+
+        /* ——— Loader spinner ——— */
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(26,82,255,0.2);
+            border-top-color: #1a52ff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ——— Notification toast ——— */
+        #toast {
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+            #toast.hidden {
+                opacity: 0;
+                transform: translateY(16px);
+                pointer-events: none;
+            }
+
+            #toast.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        /* ——— Responsive stacks ——— */
+        @media (max-width: 900px) {
+            #main-stage-row {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+    <!-- ===================== TOP NAV BAR ===================== -->
+    <header class="glass sticky top-0 z-50 flex items-center justify-between px-6 py-3 border-b border-white/5 shadow-glass">
+        <div class="flex items-center gap-3">
+            <!-- Logo icon -->
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-glow">
+                <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+                <h1 class="text-sm font-bold text-white tracking-tight leading-tight">FaceWarp<span class="text-brand-400"> Lab</span></h1>
+                <p class="text-[10px] text-slate-400 leading-none mt-0.5">Facial Image Warping & Aging System</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Status indicator -->
+            <div id="status-indicator" class="flex items-center gap-2 text-xs text-slate-400">
+                <span class="w-2 h-2 rounded-full bg-slate-600 animate-pulse-slow" id="status-dot"></span>
+                <span id="status-text">Ready</span>
+            </div>
+
+            <button id="btn-gallery"
+                    class="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-600/60 text-brand-300 hover:bg-brand-600/20 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                Gallery
+            </button>
+
+            <!-- Export Report button -->
+            <button id="btn-export"
+                    class="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-brand-600/60 text-brand-300 hover:bg-brand-600/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    disabled>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                Export Report
+            </button>
+
+            <!-- Analytics toggle -->
+            <button id="btn-analytics"
+                    class="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-lg border border-slate-600/60 text-slate-300 hover:bg-slate-700/40 transition-colors"
+                    aria-expanded="false">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                Analytics
+                <svg id="analytics-chevron" class="w-3 h-3 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ===================== MAIN LAYOUT ===================== -->
+    <div class="flex flex-1 overflow-hidden">
+
+        <!-- =========================== SIDEBAR =========================== -->
+        <aside class="w-72 flex-shrink-0 glass border-r border-white/5 overflow-y-auto flex flex-col gap-5 p-4 animate-fade-in">
+
+            <!-- ── Upload Dropzone ── -->
+            <section>
+                <h2 class="text-[11px] font-semibold uppercase tracking-widest text-slate-500 mb-2">Input Image</h2>
+                <div id="dropzone"
+                     class="relative border-2 border-dashed border-surface-500 rounded-xl p-5 cursor-pointer flex flex-col items-center gap-2 text-center"
+                     role="button" aria-label="Image upload dropzone" tabindex="0">
+                    <div id="dropzone-icon" class="pointer-events-none w-12 h-12 rounded-full bg-surface-700 flex items-center justify-center transition-colors">
+                        <svg class="w-6 h-6 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <div class="pointer-events-none">
+                        <p class="text-xs font-medium text-slate-300">Drop JPG/PNG here</p>
+                        <p class="text-[11px] text-slate-500 mt-0.5">or click to browse · Max 10 MB</p>
+                    </div>
+                    <div id="dropzone-preview" class="pointer-events-none hidden w-full mt-2">
+                        <img id="preview-thumb" src="" alt="Preview thumbnail" class="w-full h-24 object-contain rounded-lg border border-surface-600 bg-surface-800" />
+                        <p id="preview-name" class="text-[10px] text-slate-400 mt-1 truncate"></p>
+                    </div>
+                    <input type="file" id="file-input" accept="image/jpeg,image/png,image/jpg,.jpg,.jpeg,.png" class="absolute inset-0 w-full h-full cursor-pointer z-20 opacity-0" />
+                </div>
+                <button id="btn-webcam"
+                        class="w-full mt-2.5 flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-semibold border border-brand-500/50 bg-brand-500/10 text-brand-300 hover:bg-brand-500/20 transition-all duration-200"
+                        type="button">
+                    📷 Open Webcam Mode
+                </button>
+            </section>
+
+            <div class="border-t border-white/5"></div>
+
+            <!-- ── Operation Mode ── -->
+            <section>
+                <h2 class="text-[11px] font-semibold uppercase tracking-widest text-slate-500 mb-2">Operation Mode</h2>
+                <div class="flex flex-col gap-1.5">
+                    <div class="flex gap-2">
+                        <button id="mode-expression"
+                                class="mode-btn flex-1 py-2 rounded-lg text-xs font-semibold border transition-all duration-200 border-brand-500 bg-brand-600/20 text-brand-300"
+                                data-mode="expression" aria-pressed="true">
+                            😄 Expression
+                        </button>
+                        <button id="mode-aging"
+                                class="mode-btn flex-1 py-2 rounded-lg text-xs font-semibold border transition-all duration-200 border-surface-500 bg-transparent text-slate-400 hover:border-brand-600 hover:text-brand-300"
+                                data-mode="aging" aria-pressed="false">
+                            🧓 Aging
+                        </button>
+                    </div>
+                    <button id="mode-accessory"
+                            class="mode-btn w-full py-2 rounded-lg text-xs font-semibold border transition-all duration-200 border-surface-500 bg-transparent text-slate-400 hover:border-purple-500 hover:text-purple-300"
+                            data-mode="accessory" aria-pressed="false">
+                        🕶️ AI Accessory &amp; Makeup
+                    </button>
+                    <button id="mode-virtual-tryon"
+                            class="mode-btn w-full py-2 rounded-lg text-xs font-semibold border transition-all duration-200 border-surface-500 bg-transparent text-slate-400 hover:border-brand-500 hover:text-brand-300"
+                            data-mode="virtual_tryon" aria-pressed="false">
+                        Virtual Try-On
+                    </button>
+                </div>
+            </section>
+
+            <div class="border-t border-white/5"></div>
+
+            <!-- ── Parameter Sliders ── -->
+            <!-- ── Parameter Sliders ── -->
+            <button id="mode-ai-expression"
+                    class="mode-btn w-full py-2 rounded-lg text-xs font-semibold border transition-all duration-200 border-surface-500 bg-transparent text-slate-400 hover:border-brand-500 hover:text-brand-300"
+                    data-mode="ai_expression" aria-pressed="false">
+                AI Expression
+            </button>
+
+            <section class="flex flex-col gap-4">
+                <h2 class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Parameters</h2>
+
+                <!-- Aging Group (sadece aging modunda görünür) -->
+                <div class="flex flex-col gap-4" id="group-aging">
+                    <!-- Aging Intensity -->
+                    <div class="slider-group">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label id="lbl-slider-aging" class="text-xs font-medium text-slate-300" for="slider-aging">Aging Intensity</label>
+                            <span id="val-aging" class="text-xs font-mono font-semibold text-brand-400 bg-brand-950/60 px-1.5 py-0.5 rounded-md">1.00</span>
+                        </div>
+                        <input type="range" id="slider-aging" name="aging_intensity"
+                               min="0.0" max="2.0" step="0.05" value="1.0" />
+                        <div id="labels-slider-aging" class="flex justify-between text-[10px] text-slate-600 mt-0.5">
+                            <span>0.0 (De-Aging)</span>
+                            <span>1.0 (Base)</span>
+                            <span>2.0 (Aging)</span>
+                        </div>
+                    </div>
+
+                    <!-- Algorithm Engine -->
+                    <div>
+                        <p class="text-[11px] font-semibold uppercase tracking-widest text-slate-500 mb-2">Algorithm Engine</p>
+                        <div class="flex gap-2">
+                            <button id="algo-freq"
+                                    class="flex-1 py-1.5 text-[10px] font-semibold rounded-md bg-brand-500/20 text-brand-300 border border-brand-500/30 transition-all shadow-sm">
+                                Frequency-Based
+                            </button>
+                            <button id="algo-ai"
+                                    class="flex-1 py-1.5 text-[10px] font-semibold rounded-md text-slate-400 border border-transparent hover:text-slate-200 transition-all">
+                                AI-Based (GAN)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessory Group (visible only in accessory mode) -->
+                <div class="flex flex-col gap-3" id="group-accessory" style="display:none;">
+                    <p class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Editor</p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="acc-glasses" data-item="glasses"
+                                class="acc-btn flex flex-col items-center gap-1 py-3 rounded-xl text-xs font-semibold border transition-all duration-200 border-purple-500 bg-purple-600/20 text-purple-300">
+                            <span class="text-lg">🕶️</span>
+                            <span>Accessories</span>
+                        </button>
+                        <button id="acc-makeup" data-item="makeup"
+                                class="acc-btn flex flex-col items-center gap-1 py-3 rounded-xl text-xs font-semibold border transition-all duration-200 border-surface-500 bg-transparent text-slate-400 hover:border-purple-500 hover:text-purple-300">
+                            <span class="text-lg">💄</span>
+                            <span>Makeup</span>
+                        </button>
+                    </div>
+
+                    <div id="editor-makeup-section" class="flex flex-col gap-3">
+                    <p class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Makeup &amp; Color</p>
+
+                    <div class="rounded-lg border border-surface-600 bg-surface-800/70 p-3 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold text-slate-300" for="editor-hair-enabled">Hair Color</label>
+                            <input id="editor-hair-enabled" type="checkbox" class="h-4 w-4 rounded border-surface-500 bg-surface-800 text-purple-400 focus:ring-purple-400" />
+                        </div>
+                        <div id="editor-hair-swatches" class="grid grid-cols-5 gap-1.5"></div>
+                        <div class="flex gap-2">
+                            <input id="editor-hair-color" type="color" value="#6F3BB8" class="h-8 w-12 rounded border border-surface-500 bg-surface-800" />
+                            <input id="editor-hair-intensity" type="range" min="0" max="1" step="0.05" value="0.65" class="flex-1" />
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-surface-600 bg-surface-800/70 p-3 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold text-slate-300" for="editor-eye-enabled">Eye Color</label>
+                            <input id="editor-eye-enabled" type="checkbox" class="h-4 w-4 rounded border-surface-500 bg-surface-800 text-purple-400 focus:ring-purple-400" />
+                        </div>
+                        <div id="editor-eye-swatches" class="grid grid-cols-6 gap-1.5"></div>
+                        <div class="flex gap-2">
+                            <input id="editor-eye-color" type="color" value="#3F7FBF" class="h-8 w-12 rounded border border-surface-500 bg-surface-800" />
+                            <input id="editor-eye-intensity" type="range" min="0" max="1" step="0.05" value="0.45" class="flex-1" />
+                        </div>
+                    </div>
+
+                    <div class="rounded-lg border border-surface-600 bg-surface-800/70 p-3 space-y-3">
+                        <p class="text-xs font-semibold text-slate-300">Makeup</p>
+                        <div class="space-y-3" id="editor-makeup-controls">
+                            <div class="editor-makeup-row" data-kind="skin_smooth">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-[11px] text-slate-400" for="editor-skin-smooth-enabled">Skin Smooth</label>
+                                    <input id="editor-skin-smooth-enabled" type="checkbox" class="h-3.5 w-3.5 rounded border-surface-500 bg-surface-800 text-purple-400 focus:ring-purple-400" />
+                                </div>
+                                <input id="editor-skin-smooth-intensity" type="range" min="0" max="1" step="0.05" value="0.25" />
+                            </div>
+                            <div class="editor-makeup-row" data-kind="lipstick">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-[11px] text-slate-400" for="editor-lipstick-enabled">Lipstick</label>
+                                    <input id="editor-lipstick-enabled" type="checkbox" class="h-3.5 w-3.5 rounded border-surface-500 bg-surface-800 text-purple-400 focus:ring-purple-400" />
+                                </div>
+                                <div id="editor-lipstick-swatches" class="grid grid-cols-5 gap-1.5 mb-1"></div>
+                                <div class="flex gap-2">
+                                    <input id="editor-lipstick-color" type="color" value="#B00020" class="h-7 w-10 rounded border border-surface-500 bg-surface-800" />
+                                    <input id="editor-lipstick-intensity" type="range" min="0" max="1" step="0.05" value="0.7" class="flex-1" />
+                                </div>
+                            </div>
+
+                            <div class="editor-makeup-row" data-kind="blush">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-[11px] text-slate-400" for="editor-blush-enabled">Blush</label>
+                                    <input id="editor-blush-enabled" type="checkbox" class="h-3.5 w-3.5 rounded border-surface-500 bg-surface-800 text-purple-400 focus:ring-purple-400" />
+                                </div>
+                                <div id="editor-blush-swatches" class="grid grid-cols-5 gap-1.5 mb-1"></div>
+                                <div class="flex gap-2">
+                                    <input id="editor-blush-color" type="color" value="#E8A0A8" class="h-7 w-10 rounded border border-surface-500 bg-surface-800" />
+                                    <input id="editor-blush-intensity" type="range" min="0" max="1" step="0.05" value="0.35" class="flex-1" />
+                                </div>
+                            </div>
+                            <div class="editor-makeup-row" data-kind="eyeshadow">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-[11px] text-slate-400" for="editor-eyeshadow-enabled">Eyeshadow</label>
+                                    <input id="editor-eyeshadow-enabled" type="checkbox" class="h-3.5 w-3.5 rounded border-surface-500 bg-surface-800 text-purple-400 focus:ring-purple-400" />
+                                </div>
+                                <div id="editor-eyeshadow-swatches" class="grid grid-cols-5 gap-1.5 mb-1"></div>
+                                <div class="flex gap-2">
+                                    <input id="editor-eyeshadow-color" type="color" value="#8C7A6B" class="h-7 w-10 rounded border border-surface-500 bg-surface-800" />
+                                    <input id="editor-eyeshadow-intensity" type="range" min="0" max="1" step="0.05" value="0.4" class="flex-1" />
+                                </div>
+                            </div>
+                            <div class="editor-makeup-row" data-kind="eyeliner">
+                                <div class="flex items-center justify-between mb-1">
+                                    <label class="text-[11px] text-slate-400" for="editor-eyeliner-enabled">Eyeliner</label>
+                                    <input id="editor-eyeliner-enabled" type="checkbox" class="h-3.5 w-3.5 rounded border-surface-500 bg-surface-800 text-purple-400 focus:ring-purple-400" />
+                                </div>
+                                <div id="editor-eyeliner-swatches" class="grid grid-cols-5 gap-1.5 mb-1"></div>
+                                <div class="flex gap-2">
+                                    <input id="editor-eyeliner-color" type="color" value="#080808" class="h-7 w-10 rounded border border-surface-500 bg-surface-800" />
+                                    <input id="editor-eyeliner-intensity" type="range" min="0" max="1" step="0.05" value="0.5" class="flex-1" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+
+                    <div id="editor-accessory-section" class="flex flex-col gap-3 hidden">
+                    <p class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Accessories</p>
+
+                    <div class="rounded-lg border border-surface-600 bg-surface-800/70 p-3 space-y-3">
+                        <p class="text-xs font-semibold text-slate-300">Accessories</p>
+                        <select id="editor-accessory-category" class="w-full rounded-md border border-surface-500 bg-surface-800 px-2 py-1.5 text-xs text-slate-200">
+                            <option value="glasses">glasses</option>
+                            <option value="earrings">earrings</option>
+                            <option value="hair_clips">hair_clips</option>
+                        </select>
+                        <div id="editor-asset-grid" class="grid grid-cols-1 gap-1.5"></div>
+                        <div class="hidden">
+                            <select id="editor-accessory-render-mode">
+                                <option value="overlay_2d">overlay_2d</option>
+                                <option value="physics_3d">physics_3d</option>
+                                <option value="parametric_3d">parametric_3d</option>
+                                <option value="hat_light_inpaint">hat_light_inpaint</option>
+                                <option value="anydoor_inpaint">anydoor_inpaint</option>
+                                <option value="sdxl_ip_adapter_inpaint">sdxl_ip_adapter_inpaint</option>
+                                <option value="generative_hat_inpaint">generative_hat_inpaint</option>
+                                <option value="hybrid_reference_inpaint">hybrid_reference_inpaint</option>
+                            </select>
+                        </div>
+
+                        <!-- Elegant Sliders for User -->
+                        <div class="space-y-4 rounded-xl border border-white/5 bg-surface-900/40 p-4 shadow-inner mt-4">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[11px] font-medium text-slate-300 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                                        Scale
+                                    </span>
+                                </div>
+                                <input id="editor-accessory-scale" type="range" min="0.4" max="1.8" step="0.05" value="1.0" class="w-full h-1.5 bg-surface-700 rounded-lg appearance-none cursor-pointer accent-brand-500" />
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="space-y-2">
+                                    <span class="text-[10px] font-medium text-slate-400 flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                                        Horizontal Offset
+                                    </span>
+                                    <input id="editor-accessory-offset-x" type="range" min="-80" max="80" step="1" value="0" class="w-full h-1 bg-surface-700 rounded-lg appearance-none cursor-pointer accent-brand-400" />
+                                </div>
+                                <div class="space-y-2">
+                                    <span class="text-[10px] font-medium text-slate-400 flex items-center gap-1">
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>
+                                        Vertical Offset
+                                    </span>
+                                    <input id="editor-accessory-offset-y" type="range" min="-80" max="80" step="1" value="0" class="w-full h-1 bg-surface-700 rounded-lg appearance-none cursor-pointer accent-brand-400" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="editor-necklace-3d-controls" class="hidden rounded-md border border-surface-600 bg-surface-900/60 p-2 space-y-2">
+                            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Physics Necklace</p>
+                            <label class="text-[11px] text-slate-400">Material
+                                <select id="editor-accessory-necklace-material" class="mt-1 w-full rounded-md border border-surface-500 bg-surface-800 px-2 py-1.5 text-xs text-slate-200">
+                                    <option value="gold">gold</option>
+                                    <option value="silver">silver</option>
+                                    <option value="rose_gold">rose_gold</option>
+                                    <option value="black">black</option>
+                                </select>
+                            </label>
+                            <label class="text-[11px] text-slate-400">Chain Length <input id="editor-accessory-chain-length" type="range" min="0.6" max="1.5" step="0.05" value="1.0" /></label>
+                            <label class="text-[11px] text-slate-400">Pendant Size <input id="editor-accessory-pendant-size" type="range" min="0.05" max="0.22" step="0.01" value="0.12" /></label>
+                            <label class="text-[11px] text-slate-400">Stiffness <input id="editor-accessory-chain-stiffness" type="range" min="0.2" max="1.0" step="0.05" value="0.75" /></label>
+                        </div>
+
+                        <div id="editor-earring-motion-controls" class="hidden rounded-md border border-surface-600 bg-surface-900/60 p-2 space-y-2">
+                            <p class="text-[10px] font-semibold uppercase tracking-widest text-slate-500">Earring Motion</p>
+                            <label class="text-[11px] text-slate-400">Type
+                                <select id="editor-accessory-earring-type" class="mt-1 w-full rounded-md border border-surface-500 bg-surface-800 px-2 py-1.5 text-xs text-slate-200">
+                                    <option value="auto">auto</option>
+                                    <option value="stud">stud</option>
+                                    <option value="hoop">hoop</option>
+                                    <option value="dangle">dangle</option>
+                                    <option value="long_dangle">long_dangle</option>
+                                </select>
+                            </label>
+                            <label class="text-[11px] text-slate-400">Swing
+                                <select id="editor-accessory-earring-preset" class="mt-1 w-full rounded-md border border-surface-500 bg-surface-800 px-2 py-1.5 text-xs text-slate-200">
+                                    <option value="subtle">subtle</option>
+                                    <option value="normal" selected>normal</option>
+                                    <option value="strong">strong</option>
+                                    <option value="off">off</option>
+                                </select>
+                            </label>
+                            <label class="text-[11px] text-slate-400">Swing Intensity <input id="editor-accessory-earring-swing" type="range" min="0" max="1.6" step="0.05" value="0.8" /></label>
+                        </div>
+
+
+
+                        <button id="editor-add-accessory" type="button" class="w-full rounded-md border border-purple-400/40 bg-purple-500/15 px-2 py-1.5 text-xs font-semibold text-purple-200 hover:bg-purple-500/25">
+                            Add / Apply Accessory
+                        </button>
+                        <div id="editor-selected-accessories" class="space-y-1 text-[10px] text-slate-400"></div>
+                    </div>
+
+                    </div>
+
+
+                </div>
+
+                <div class="flex flex-col gap-4" id="group-tryon" style="display:none;">
+                    <p class="text-[11px] font-semibold uppercase tracking-widest text-slate-500">Virtual Try-On</p>
+                    <div class="rounded-lg border border-surface-600 bg-surface-800/70 p-3 space-y-3">
+                        <div class="flex items-center justify-between gap-2">
+                            <p class="text-xs font-semibold text-slate-300">Clothing Store</p>
+                            <span id="tryon-store-selected" class="truncate text-[10px] text-slate-500">No store item selected.</span>
+                        </div>
+                        <div class="flex items-center gap-2 rounded-md border border-surface-600 bg-surface-900/60 p-2">
+                            <div class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded border border-surface-600 bg-surface-900/60">
+                                <img id="tryon-store-selected-thumb" src="" alt="" class="hidden h-full w-full object-contain" />
+                                <span id="tryon-store-selected-empty" class="text-[10px] text-slate-600">None</span>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <p id="tryon-store-selected-name" class="truncate text-xs font-semibold text-slate-300">No cloth selected</p>
+                                <p id="tryon-store-selected-meta" class="truncate text-[10px] text-slate-500">Choose a garment from the store.</p>
+                            </div>
+                        </div>
+                        <button id="tryon-store-open" type="button" class="w-full rounded-md border border-brand-400/40 bg-brand-500/15 px-2 py-2 text-xs font-semibold text-brand-100 hover:bg-brand-500/25">
+                            Choose Cloth
+                        </button>
+                        <div class="flex items-center justify-between gap-2">
+                            <button id="tryon-store-clear" type="button" class="text-[10px] font-semibold text-slate-500 hover:text-slate-200">
+                                Clear store selection
+                            </button>
+                            <span id="tryon-store-count" class="text-[10px] text-slate-600">-</span>
+                        </div>
+                    </div>
+                    <div class="hidden rounded-lg border border-surface-600 bg-surface-800/70 p-3 space-y-3">
+                        <p class="text-xs font-semibold text-slate-300">Garment Image</p>
+                        <p class="text-[11px] leading-relaxed text-slate-400">
+                            Upload a full-body person image in the main dropzone, then choose a clothing image here.
+                        </p>
+                        <label class="block">
+                            <input id="tryon-garment-input" type="file" accept="image/png,image/jpeg" class="hidden" />
+                            <span class="block w-full cursor-pointer rounded-md border border-brand-400/40 bg-brand-500/15 px-2 py-2 text-center text-xs font-semibold text-brand-100 hover:bg-brand-500/25">
+                                Select Garment
+                            </span>
+                        </label>
+                        <p id="tryon-garment-name" class="truncate text-[10px] text-slate-500">No garment selected.</p>
+
+                        <label class="hidden text-[11px] text-slate-400">Model
+                            <select id="tryon-model-type" class="mt-1 w-full rounded-md border border-surface-500 bg-surface-800 px-2 py-1.5 text-xs text-slate-200">
+                                <option value="dc">DC full-body</option>
+                                <option value="hd">HD upper-body</option>
+                            </select>
+                        </label>
+                        <label class="hidden text-[11px] text-slate-400">Category
+                            <select id="tryon-category" class="mt-1 w-full rounded-md border border-surface-500 bg-surface-800 px-2 py-1.5 text-xs text-slate-200">
+                                <option value="upperbody">upperbody</option>
+                                <option value="lowerbody">lowerbody</option>
+                                <option value="dress">dress</option>
+                            </select>
+                        </label>
+                        <label class="text-[11px] text-slate-400">
+                            Steps <span id="tryon-steps-value" class="float-right font-mono text-brand-300">10</span>
+                            <input id="tryon-steps" type="range" min="5" max="50" step="1" value="10" />
+                        </label>
+                        <label class="text-[11px] text-slate-400">
+                            Guidance <span id="tryon-scale-value" class="float-right font-mono text-brand-300">2.0</span>
+                            <input id="tryon-scale" type="range" min="0.5" max="8" step="0.1" value="2.0" />
+                        </label>
+                        <p id="tryon-status-note" class="rounded-md border border-amber-400/20 bg-amber-500/10 p-2 text-[11px] leading-relaxed text-amber-100">
+                            Checking local OOTDiffusion runtime...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Expression Group (sadece expression modunda görünür) -->
+                <div class="flex flex-col gap-4" id="group-expression">
+
+                    <!-- Smile Intensity -->
+                    <div class="slider-group">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-medium text-slate-300" for="slider-smile">Smile Intensity</label>
+                            <span id="val-smile" class="text-xs font-mono font-semibold text-brand-400 bg-brand-950/60 px-1.5 py-0.5 rounded-md">0.50</span>
+                        </div>
+                        <input type="range" id="slider-smile" name="smile_intensity"
+                               min="0.0" max="1.0" step="0.05" value="0.5" />
+                        <div class="flex justify-between text-[10px] text-slate-600 mt-0.5"><span>0.0</span><span>1.0</span></div>
+                    </div>
+
+                    <!-- Eyebrow Height -->
+                    <div class="slider-group">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-medium text-slate-300" for="slider-eyebrow">Eyebrow Height</label>
+                            <span id="val-eyebrow" class="text-xs font-mono font-semibold text-brand-400 bg-brand-950/60 px-1.5 py-0.5 rounded-md">0.00</span>
+                        </div>
+                        <input type="range" id="slider-eyebrow" name="eyebrow_height"
+                               min="-1.0" max="1.0" step="0.05" value="0.0" />
+                        <div class="flex justify-between text-[10px] text-slate-600 mt-0.5"><span>-1.0</span><span>+1.0</span></div>
+                    </div>
+
+                    <!-- Lip Widening -->
+                    <div class="slider-group">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-medium text-slate-300" for="slider-lip">Lip Widening</label>
+                            <span id="val-lip" class="text-xs font-mono font-semibold text-brand-400 bg-brand-950/60 px-1.5 py-0.5 rounded-md">0.00</span>
+                        </div>
+                        <input type="range" id="slider-lip" name="lip_intensity"
+                               min="0.0" max="1.0" step="0.05" value="0.0" />
+                        <div class="flex justify-between text-[10px] text-slate-600 mt-0.5"><span>0.0</span><span>+1.0</span></div>
+                    </div>
+
+                    <!-- Face Slimming -->
+                    <div class="slider-group">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-medium text-slate-300" for="slider-slim">Face Slimming</label>
+                            <span id="val-slim" class="text-xs font-mono font-semibold text-brand-400 bg-brand-950/60 px-1.5 py-0.5 rounded-md">0.00</span>
+                        </div>
+                        <input type="range" id="slider-slim" name="face_slimming"
+                               min="0.0" max="1.0" step="0.05" value="0.0" />
+                        <div class="flex justify-between text-[10px] text-slate-600 mt-0.5"><span>0.0</span><span>1.0</span></div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <div class="border-t border-white/5"></div>
+
+            <!-- ── AI Expression ── -->
+            <section id="ai-expression-dev-panel" class="rounded-lg border border-brand-500/40 bg-brand-950/10 p-3" style="display:none;">
+                <div class="mb-3 flex items-center justify-between gap-2">
+                    <div>
+                        <p class="text-[11px] font-semibold uppercase tracking-widest text-brand-300">AI Expression</p>
+                        
+                    </div>
+                </div>
+                <div class="flex flex-col gap-3">
+
+                <!-- Elegant Expression Settings -->
+                <div class="space-y-4 rounded-xl border border-white/5 bg-surface-900/40 p-4 shadow-inner mt-2">
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-medium text-slate-300 flex items-center gap-1.5" for="ai-expression-preset">
+                            <svg class="w-3.5 h-3.5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            Preset
+                        </label>
+                        <select id="ai-expression-preset"
+                                class="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2 text-xs font-medium text-slate-200 focus:border-brand-400 focus:outline-none transition-colors">
+                            <option value="smile">Smile</option>
+                            <option value="eyebrow_raise">Eyebrow Raise</option>
+                            <option value="wink">Wink</option>
+                            <option value="angry">Angry</option>
+                        </select>
+                    </div>
+
+                    <div class="hidden">
+                        <label class="flex items-center gap-2 text-xs font-medium text-slate-300">
+                            <input type="checkbox" id="ai-use-driving-template"
+                                   class="h-3.5 w-3.5 rounded border-surface-500 bg-surface-800 text-brand-400 focus:ring-brand-400" />
+                            <span>Use template motion</span>
+                        </label>
+                        <div>
+                            <label class="text-xs font-medium text-slate-300" for="ai-driving-template">Driving Template</label>
+                            <select id="ai-driving-template"
+                                    class="mt-1 w-full rounded-md border border-surface-500 bg-surface-800 px-2 py-1.5 text-xs text-slate-200 focus:border-brand-400 focus:outline-none">
+                                <option value="direct_smile">direct_smile</option>
+                                <option value="laugh">laugh</option>
+                                <option value="open_lip">open_lip</option>
+                                <option value="wink">wink</option>
+                                <option value="shy">shy</option>
+                                <option value="aggrieved">aggrieved</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-1">
+                        <div class="flex justify-between items-center">
+                            <label class="text-[11px] font-medium text-slate-300 flex items-center gap-1.5" for="ai-expression-intensity">
+                                <svg class="w-3.5 h-3.5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                Intensity
+                            </label>
+                            <span id="ai-expression-intensity-value" class="text-[10px] font-mono font-semibold text-brand-200 bg-brand-500/20 border border-brand-500/30 px-1.5 py-0.5 rounded">0.65</span>
+                        </div>
+                        <input type="range" id="ai-expression-intensity"
+                               min="0.0" max="1.0" step="0.05" value="0.65" class="w-full h-1.5 bg-surface-700 rounded-lg appearance-none cursor-pointer accent-brand-500" />
+                    </div>
+                </div>
+
+                <button id="btn-ai-expression"
+                        class="w-full rounded-lg border border-brand-400/50 bg-brand-600/20 px-3 py-2 text-xs font-semibold text-brand-100 transition-colors hover:bg-brand-600/30 disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled>
+                    Apply AI Expression
+                </button>
+
+
+                </div>
+            </section>
+
+            <div class="border-t border-white/5"></div>
+
+            <section>
+                <h2 class="text-[11px] font-semibold uppercase tracking-widest text-slate-500 mb-3">Overlay</h2>
+
+                <!-- Show Landmarks -->
+                <input type="checkbox" id="landmark-toggle" class="sr-only" />
+                <label for="landmark-toggle" class="flex items-center gap-3 cursor-pointer select-none group mb-3" aria-label="Toggle landmark overlay">
+                    <div class="relative w-10 h-5 toggle-track rounded-full border border-surface-500 bg-surface-700 transition-all duration-300">
+                        <div class="toggle-dot absolute left-0.5 top-0.5 w-4 h-4 rounded-full bg-slate-400 transition-all duration-300"></div>
+                    </div>
+                    <span class="text-xs font-medium text-slate-300 group-hover:text-white transition-colors">Show Landmarks</span>
+                    <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="3" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" /></svg>
+                </label>
+
+                <!-- Grayscale View -->
+                <input type="checkbox" id="grayscale-toggle" class="sr-only" />
+                <label for="grayscale-toggle" class="flex items-center gap-3 cursor-pointer select-none group" aria-label="Toggle grayscale view">
+                    <div class="relative w-10 h-5 toggle-track rounded-full border border-surface-500 bg-surface-700 transition-all duration-300">
+                        <div class="toggle-dot absolute left-0.5 top-0.5 w-4 h-4 rounded-full bg-slate-400 transition-all duration-300"></div>
+                    </div>
+                    <span class="text-xs font-medium text-slate-300 group-hover:text-white transition-colors">Grayscale View</span>
+                    <!-- greyscale icon: two half-circles -->
+                    <svg class="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <circle cx="12" cy="12" r="9" stroke-width="1.5" />
+                        <path d="M12 3a9 9 0 0 1 0 18V3z" fill="currentColor" stroke="none" opacity="0.5" />
+                    </svg>
+                </label>
+                <!-- Note shown only after process -->
+                <p id="grayscale-note" class="hidden mt-1.5 text-[10px] text-slate-500 leading-relaxed pl-[52px]">
+                    Histogram-equalized · used for FFT analysis
+                </p>
+            </section>
+
+            <div class="border-t border-white/5"></div>
+
+            <!-- ── Process Button ── -->
+            <button id="btn-process" class="w-full py-3 rounded-xl text-sm font-bold text-white tracking-wide" disabled>
+                <span id="btn-process-label" class="flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    Process Image
+                </span>
+                <span id="btn-process-spinner" class="hidden items-center justify-center gap-2 text-xs">
+                    <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    Processing…
+                </span>
+            </button>
+
+            <!-- ── Info card ── -->
+            <div class="rounded-xl bg-surface-700/50 border border-surface-600/50 p-3">
+                <p class="text-[11px] text-slate-400 leading-relaxed">Landmark detection powered by <span class="text-brand-300 font-medium">MediaPipe</span> · Warping via <span class="text-brand-300 font-medium">TPS/RBF</span> splines · Resolution standard: <span class="text-slate-300 font-mono">512×512</span></p>
+            </div>
+
+        </aside>
+
+        <!-- =========================== CENTER STAGE =========================== -->
+        <main class="flex-1 flex flex-col overflow-y-auto p-6 gap-6 animate-slide-up">
+
+            <!-- ── Before / After heading ── -->
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-base font-bold text-white">Image Comparison</h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Standard resolution: 512 × 512 px</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <!-- Grayscale active badge — shown when toggle is on AND grayscale data is available -->
+                    <div id="grayscale-badge" class="hidden items-center gap-1.5 bg-surface-700/80 border border-slate-600/50 text-slate-300 text-[10px] font-medium px-2.5 py-1 rounded-full">
+                        <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <circle cx="12" cy="12" r="9" stroke-width="1.5" />
+                            <path d="M12 3a9 9 0 0 1 0 18V3z" fill="currentColor" stroke="none" opacity="0.6" />
+                        </svg>
+                        Grayscale · hist-eq
+                    </div>
+                    <div id="processing-badge" class="hidden items-center gap-2 bg-brand-950/60 border border-brand-700/50 text-brand-300 text-xs font-medium px-3 py-1.5 rounded-full">
+                        <div class="spinner w-3 h-3 !border-2"></div>
+                        Warping…
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Before vs After stage ── -->
+            <div id="main-stage-row" class="flex gap-5 justify-center">
+
+                <!-- BEFORE -->
+                <div class="flex flex-col items-center gap-3 flex-1 min-w-0">
+                    <div class="flex items-center gap-2 self-start">
+                        <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Original</span>
+                    </div>
+                    <div class="img-stage mx-auto" id="stage-original">
+                        <div class="img-placeholder">
+                            <svg class="w-12 h-12 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <p class="text-xs text-slate-600">No image loaded</p>
+                        </div>
+                        <img id="img-original" src="" alt="Original face image" class="hidden" />
+                        <!-- Grayscale overlay for Original stage (z-index 5, below landmarks) -->
+                        <img id="img-grayscale-original" src="" alt="Grayscale original" class="grayscale-overlay hidden" style="z-index:5;" />
+                        <canvas id="canvas-landmarks-original" class="hidden" width="512" height="512" style="z-index:10;"></canvas>
+                    </div>
+                    <p class="text-[10px] text-slate-600 font-mono" id="label-original">—</p>
+                </div>
+
+                <!-- Divider arrow -->
+                <div class="flex flex-col items-center justify-center gap-2 pt-8">
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="w-px h-16 bg-gradient-to-b from-transparent via-brand-600/50 to-transparent"></div>
+                        <div class="w-7 h-7 rounded-full bg-surface-700 border border-brand-600/40 flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                        </div>
+                        <div class="w-px h-16 bg-gradient-to-b from-transparent via-brand-600/50 to-transparent"></div>
+                    </div>
+                    <span id="mode-badge" class="text-[10px] font-semibold text-brand-400 uppercase tracking-widest rotate-90 whitespace-nowrap">Expression</span>
+                </div>
+
+                <!-- AFTER -->
+                <div class="flex flex-col items-center gap-3 flex-1 min-w-0">
+                    <div class="flex items-center gap-2 self-start">
+                        <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse-slow"></span>
+                        <span class="text-xs font-semibold text-brand-300 uppercase tracking-wider">Warped</span>
+                    </div>
+                    <div class="img-stage mx-auto" id="stage-result">
+                        <div class="img-placeholder" id="result-placeholder">
+                            <svg class="w-12 h-12 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                            <p class="text-xs text-slate-600">Awaiting process</p>
+                        </div>
+                        <div id="result-spinner" class="hidden absolute inset-0 flex items-center justify-center bg-surface-800/80 z-20">
+                            <div class="spinner"></div>
+                        </div>
+                        <img id="img-result" src="" alt="Warped face result" class="hidden" />
+                        <!-- Grayscale overlay for Result stage -->
+                        <img id="img-grayscale-result" src="" alt="Grayscale result" class="grayscale-overlay hidden" style="z-index:5;" />
+                        <canvas id="canvas-landmarks-result" class="hidden" width="512" height="512" style="z-index:10;"></canvas>
+                    </div>
+                    <p class="text-[10px] text-slate-600 font-mono" id="label-result">—</p>
+                </div>
+
+            </div>
+
+            <!-- ── Webcam Stage ── -->
+            <div id="webcam-stage-container" class="hidden flex-col items-center gap-4 flex-1">
+                <div class="flex items-center gap-2 self-start">
+                    <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+                    <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Webcam Live Preview</span>
+                    <span id="webcam-fps-badge" class="ml-2 text-[10px] font-mono bg-surface-700 text-slate-300 px-1.5 py-0.5 rounded border border-slate-600/50">0 FPS</span>
+                </div>
+                <div class="grid w-full grid-cols-1 gap-5 lg:grid-cols-2">
+                    <div class="flex flex-col items-center gap-3 min-w-0">
+                        <div class="flex items-center gap-2 self-start">
+                            <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Camera Original</span>
+                        </div>
+                        <div class="img-stage mx-auto relative" id="stage-webcam-original">
+                            <video id="webcam-video" autoplay playsinline class="hidden"></video>
+                            <canvas id="webcam-raw-canvas" width="512" height="512" style="z-index:10;"></canvas>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-center gap-3 min-w-0">
+                        <div class="flex items-center gap-2 self-start">
+                            <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse-slow"></span>
+                            <span class="text-xs font-semibold text-brand-300 uppercase tracking-wider">Camera Effects</span>
+                        </div>
+                        <div class="img-stage mx-auto relative" id="stage-webcam">
+                            <div id="webcam-spinner" class="absolute inset-0 flex items-center justify-center bg-surface-800/80 z-20">
+                                <div class="spinner"></div>
+                            </div>
+                            <canvas id="webcam-canvas" width="512" height="512" style="z-index:10;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-3 justify-center w-full max-w-[512px]">
+                    <button id="btn-webcam-capture" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-br from-brand-500 to-brand-700 text-white hover:opacity-90 transition-all shadow-glow" type="button">
+                        📸 Capture Photo
+                    </button>
+                    <button id="btn-webcam-close" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-semibold border border-surface-600 bg-surface-800 text-slate-300 hover:bg-surface-700 transition-all" type="button">
+                        ❌ Close Camera
+                    </button>
+                </div>
+            </div><!-- /main-stage-row -->
+            <!-- ── Quick Metrics Strip ── -->
+            <div id="metrics-strip" class="grid grid-cols-3 gap-3 opacity-0 transition-opacity duration-500">
+                <div class="glass rounded-xl p-3 flex flex-col gap-1">
+                    <p class="text-[10px] text-slate-500 uppercase tracking-wider">MSE</p>
+                    <p id="metric-mse" class="text-xl font-bold font-mono text-white">—</p>
+                    <p class="text-[10px] text-slate-500">Mean Squared Error</p>
+                </div>
+                <div class="glass rounded-xl p-3 flex flex-col gap-1">
+                    <p class="text-[10px] text-slate-500 uppercase tracking-wider">PSNR</p>
+                    <p id="metric-psnr" class="text-xl font-bold font-mono text-white">—</p>
+                    <p class="text-[10px] text-slate-500">Peak SNR · dB</p>
+                </div>
+                <div class="glass rounded-xl p-3 flex flex-col gap-1">
+                    <p class="text-[10px] text-slate-500 uppercase tracking-wider">SSIM</p>
+                    <p id="metric-ssim" class="text-xl font-bold font-mono text-white">—</p>
+                    <p class="text-[10px] text-slate-500">Structural Similarity</p>
+                </div>
+            </div>
+
+        </main>
+    </div><!-- /flex layout -->
+    <!-- ===================== ANALYTICS DRAWER ===================== -->
+    <div id="analytics-drawer" class="collapsed glass border-t border-white/5 px-6 py-0 overflow-hidden">
+        <div class="py-5 flex flex-col gap-6">
+
+            <h2 class="text-sm font-bold text-white">Frequency-Domain Analytics</h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+                <!-- FFT — Original -->
+                <div class="glass rounded-xl p-4 flex flex-col gap-2 lg:col-span-1">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-semibold text-slate-300">FFT Magnitude Spectrum</h3>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-700 text-slate-400">Original</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500">Log-scaled · 2D DFT of grayscale image</p>
+                    <div class="relative bg-surface-900 rounded-lg overflow-hidden" style="height:160px">
+                        <img id="img-fft-original" src="" class="hidden w-full h-full object-contain" />
+                        <div id="fft-original-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-700 text-xs">No data</div>
+                    </div>
+
+                    <div class="border-t border-white/5 my-1"></div>
+
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-semibold text-slate-300">FFT Phase Diagram</h3>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-slate-700 text-slate-400">Original</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500">[-π, π] mapped · Phase values of 2D DFT</p>
+                    <div class="relative bg-surface-900 rounded-lg overflow-hidden" style="height:160px">
+                        <img id="img-fft-phase-original" src="" class="hidden w-full h-full object-contain" />
+                        <div id="fft-phase-original-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-700 text-xs">No data</div>
+                    </div>
+                </div>
+
+                <!-- FFT — Warped -->
+                <div class="glass rounded-xl p-4 flex flex-col gap-2 lg:col-span-1">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-semibold text-slate-300">FFT Magnitude Spectrum</h3>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-brand-950 text-brand-400">Warped</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500">Log-scaled · 2D DFT of grayscale image</p>
+                    <div class="relative bg-surface-900 rounded-lg overflow-hidden" style="height:160px">
+                        <img id="img-fft-result" src="" class="hidden w-full h-full object-contain" />
+                        <div id="fft-result-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-700 text-xs">No data</div>
+                    </div>
+
+                    <div class="border-t border-white/5 my-1"></div>
+
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xs font-semibold text-slate-300">FFT Phase Diagram</h3>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-brand-950 text-brand-400">Warped</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500">[-π, π] mapped · Phase values of 2D DFT</p>
+                    <div class="relative bg-surface-900 rounded-lg overflow-hidden" style="height:160px">
+                        <img id="img-fft-phase-result" src="" class="hidden w-full h-full object-contain" />
+                        <div id="fft-phase-result-placeholder" class="absolute inset-0 flex items-center justify-center text-slate-700 text-xs">No data</div>
+                    </div>
+                </div>
+
+                <!-- Metrics Table -->
+                <div class="glass rounded-xl p-4 flex flex-col gap-3 lg:col-span-1">
+                    <h3 class="text-xs font-semibold text-slate-300">Quality Metrics</h3>
+                    <div class="overflow-auto flex-1" style="max-height: 500px; overflow-y: auto;">
+                        <table class="w-full text-xs" id="metrics-table">
+                            <thead>
+                                <tr class="border-b border-surface-600">
+                                    <th class="text-left py-2 text-slate-500 font-medium">Metric</th>
+                                    <th class="text-right py-2 text-slate-500 font-medium">Value</th>
+                                    <th class="text-right py-2 text-slate-500 font-medium">Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-surface-700/50 hover:bg-surface-700/30 transition-colors">
+                                    <td class="py-2.5 text-slate-300 font-medium">MSE</td>
+                                    <td class="py-2.5 text-right font-mono text-slate-300" id="tbl-mse">—</td>
+                                    <td class="py-2.5 text-right" id="tbl-mse-rating"><span class="text-slate-600">N/A</span></td>
+                                </tr>
+                                <tr class="border-b border-surface-700/50 hover:bg-surface-700/30 transition-colors">
+                                    <td class="py-2.5 text-slate-300 font-medium">PSNR</td>
+                                    <td class="py-2.5 text-right font-mono text-slate-300" id="tbl-psnr">—</td>
+                                    <td class="py-2.5 text-right" id="tbl-psnr-rating"><span class="text-slate-600">N/A</span></td>
+                                </tr>
+                                <tr class="border-b border-surface-700/50 hover:bg-surface-700/30 transition-colors">
+                                    <td class="py-2.5 text-slate-300 font-medium">SSIM</td>
+                                    <td class="py-2.5 text-right font-mono text-slate-300" id="tbl-ssim">—</td>
+                                    <td class="py-2.5 text-right" id="tbl-ssim-rating"><span class="text-slate-600">N/A</span></td>
+                                </tr>
+                                <tr class="hover:bg-surface-700/30 transition-colors">
+                                    <td class="py-2.5 text-slate-300 font-medium">Processing Time</td>
+                                    <td class="py-2.5 text-right font-mono text-slate-300" id="tbl-time">—</td>
+                                    <td class="py-2.5 text-right"><span class="text-slate-600 text-[10px]">ms</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pt-2 border-t border-surface-600 flex flex-col gap-1.5">
+                        <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Session Parameters</p>
+                        <div id="param-snapshot" class="font-mono text-[10px] text-slate-400 space-y-0.5">
+                            <p>Mode: <span id="snap-mode" class="text-brand-400">expression</span></p>
+                            <p>Aging: <span id="snap-aging" class="text-brand-400">1.00</span></p>
+                            <p>Smile: <span id="snap-smile" class="text-brand-400">0.50</span></p>
+                            <p>Eyebrow: <span id="snap-eyebrow" class="text-brand-400">0.00</span></p>
+                            <p>Slim: <span id="snap-slim" class="text-brand-400">0.00</span></p>
+                            <p>Landmarks: <span id="snap-landmarks" class="text-brand-400">off</span></p>
+                            <p>Grayscale: <span id="snap-grayscale" class="text-brand-400">off</span></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div><!-- /analytics-drawer -->
+    <!-- ===================== TOAST ===================== -->
+    <div id="toast" class="hidden fixed bottom-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-glass glass border border-white/10 text-sm text-white max-w-xs transition-all duration-300">
+        <span id="toast-icon" class="text-base">ℹ️</span>
+        <span id="toast-msg">Message</span>
+    </div>
+
+    <div id="gallery-modal" class="hidden fixed inset-0 z-[100] bg-surface-900/80 backdrop-blur-sm flex items-center justify-center p-6 opacity-0 transition-opacity duration-300">
+        <div class="glass w-full max-w-5xl max-h-[85vh] rounded-2xl border border-white/10 flex flex-col shadow-2xl transform scale-95 transition-transform duration-300">
+
+            <div class="flex items-center justify-between p-5 border-b border-white/5">
+                <h2 class="text-base font-bold text-white flex items-center gap-2">
+                    <svg class="w-5 h-5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    Processed Images Gallery
+                </h2>
+                <button id="btn-close-gallery" class="text-slate-400 hover:text-white transition-colors bg-surface-800 p-1.5 rounded-lg border border-surface-600 hover:bg-surface-700">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 custom-scrollbar">
+                <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
+                </div>
+
+                <div id="gallery-empty" class="hidden flex-col items-center justify-center py-16 text-slate-500">
+                    <div class="w-16 h-16 rounded-full bg-surface-800 flex items-center justify-center mb-4 border border-surface-600">
+                        <svg class="w-8 h-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <p class="text-sm font-medium text-slate-300">No processed images found</p>
+                    <p class="text-xs text-slate-500 mt-1">Upload and process an image to see it here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox-modal" class="hidden fixed inset-0 z-[200] bg-black/95 backdrop-blur-md flex items-center justify-center p-4 md:p-10 opacity-0 transition-opacity duration-300">
+        <button id="btn-close-lightbox" class="absolute top-6 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2.5 rounded-xl backdrop-blur transition-all z-10 border border-white/10">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+
+        <div class="relative w-full h-full flex flex-col items-center justify-center">
+            <img id="lightbox-img" src="" class="max-w-full max-h-full object-contain rounded-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] transform scale-95 transition-all duration-300" />
+
+            <button id="btn-lightbox-original" class="hidden absolute bottom-6 px-5 py-2.5 bg-surface-900/80 backdrop-blur border border-white/10 rounded-xl text-xs font-semibold text-white hover:bg-brand-600 transition-colors shadow-lg">
+                Show Original
+            </button>
+        </div>
+    </div>
+
+    <div id="tryon-store-modal" class="hidden fixed inset-0 z-[180] bg-black/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-200">
+        <div class="mx-auto flex h-full max-h-[900px] w-full max-w-6xl flex-col overflow-hidden rounded-lg border border-surface-600 bg-surface-900 shadow-glass">
+            <div class="flex shrink-0 items-center justify-between gap-4 border-b border-surface-700 px-4 py-3">
+                <div class="min-w-0">
+                    <p class="text-[11px] font-semibold uppercase tracking-widest text-brand-300">FaceWarp Store</p>
+                    <h3 class="truncate text-base font-bold text-white">Choose Cloth</h3>
+                </div>
+                <button id="tryon-store-close" type="button" class="rounded-md border border-surface-600 bg-surface-800 px-3 py-2 text-xs font-semibold text-slate-300 hover:border-brand-400 hover:text-white">
+                    Close
+                </button>
+            </div>
+            <div class="shrink-0 border-b border-surface-700 px-4 py-3">
+                <div id="tryon-store-tabs" class="flex flex-wrap gap-2"></div>
+            </div>
+            <div class="min-h-0 flex-1 overflow-y-auto p-4">
+                <div id="tryon-store-grid" class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/static/js/jspdf.umd.min.js"></script>
+    <script type="module">
+        import {
+            FilesetResolver,
+            FaceLandmarker,
+            ImageSegmenter,
+        } from '/static/vendor/mediapipe/vision_bundle.mjs';
+
+        window.FilesetResolver = FilesetResolver;
+        window.FaceLandmarker = FaceLandmarker;
+        window.ImageSegmenter = ImageSegmenter;
+        window.dispatchEvent(new Event('mediapipe-vision-ready'));
+    </script>
+    <script src="/static/js/main.js?v=202606241500"></script>
+
+    <script>
+        // AI ve Klasik mod butonlarına tıklandığında slider'ı dinamik olarak değiştirir
+        document.addEventListener('DOMContentLoaded', () => {
+        const algoFreq = document.getElementById('algo-freq');
+        const algoAi = document.getElementById('algo-ai');
+        const sliderAging = document.getElementById('slider-aging');
+        const valAging = document.getElementById('val-aging');
+
+        if(!sliderAging) return;
+
+        const labelMin = sliderAging.nextElementSibling.children[0];
+        const labelMid = sliderAging.nextElementSibling.children[1];
+        const labelMax = sliderAging.nextElementSibling.children[2];
+        const titleLabel = sliderAging.previousElementSibling.children[0];
+
+        if(algoFreq && algoAi) {
+        // Klasik Algoritma Seçildiğinde
+        algoFreq.addEventListener('click', () => {
+        sliderAging.min = "0.0";
+        sliderAging.max = "2.0";
+        sliderAging.step = "0.05";
+        sliderAging.value = "1.0";
+        valAging.textContent = "1.00";
+        titleLabel.textContent = "Aging Intensity";
+        labelMin.textContent = "0.0 (De-Aging)";
+        labelMid.textContent = "1.0 (Base)";
+        labelMax.textContent = "2.0 (Aging)";
+        });
+
+        // AI Algoritması Seçildiğinde
+        algoAi.addEventListener('click', () => {
+        sliderAging.min = "7";
+        sliderAging.max = "85";
+        sliderAging.step = "1";
+        sliderAging.value = "60";
+        valAging.textContent = "60";
+        titleLabel.textContent = "Target Age";
+        labelMin.textContent = "7 (Genç)";
+        labelMid.textContent = "Yaş Seçimi";
+        labelMax.textContent = "85 (Yaşlı)";
+        });
+        }
+
+        // Slider kaydırıldıkça değeri güncelle
+        sliderAging.addEventListener('input', (e) => {
+        // Eğer AI modu aktifse tam sayı (yaş) göster, değilse ondalıklı
+        if(sliderAging.max === "85") {
+        valAging.textContent = e.target.value;
+        } else {
+        valAging.textContent = parseFloat(e.target.value).toFixed(2);
+        }
+        });
+        });
+    </script>
+</body>
+</html>

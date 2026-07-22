@@ -1,0 +1,12 @@
+[
+  {"id": "black", "label": "Black", "hex": "#151515"},
+  {"id": "brown", "label": "Brown", "hex": "#5A3825"},
+  {"id": "dark_brown", "label": "Dark Brown", "hex": "#2E1A12"},
+  {"id": "blonde", "label": "Blonde", "hex": "#CFAE67"},
+  {"id": "platinum", "label": "Platinum", "hex": "#E8E0C8"},
+  {"id": "auburn", "label": "Auburn", "hex": "#7A3324"},
+  {"id": "red", "label": "Red", "hex": "#A83224"},
+  {"id": "blue", "label": "Blue", "hex": "#2456A6"},
+  {"id": "purple", "label": "Purple", "hex": "#6F3BB8"},
+  {"id": "pink", "label": "Pink", "hex": "#D45A9E"}
+]

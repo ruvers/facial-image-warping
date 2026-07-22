@@ -1,0 +1,1 @@
+"""Parametric hat accessory pipeline."""

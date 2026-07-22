@@ -1,0 +1,337 @@
+{
+  "version": 2,
+  "local_only": true,
+  "supported_render_modes": [
+    "overlay_2d",
+    "pose_aware_2d",
+    "physics_3d",
+    "parametric_3d",
+    "generative_refine",
+    "hat_light_inpaint",
+    "anydoor_inpaint",
+    "sdxl_ip_adapter_inpaint",
+    "generative_hat_inpaint",
+    "hybrid_reference_inpaint",
+    "hybrid_3d_refine"
+  ],
+  "metadata_schema": {
+    "necklaces": {
+      "supported_categories": [
+        "pendant_necklace",
+        "chain_necklace",
+        "choker"
+      ],
+      "physics_3d": {
+        "chain_length": "float",
+        "chain_thickness": "float pixels",
+        "stiffness": "float 0..1",
+        "pendant_enabled": "bool",
+        "pendant_size": "float face-relative",
+        "pendant_weight": "float",
+        "material": "gold|silver|rose_gold|black",
+        "anchor_mode": "clavicle_drape|neck_loop|choker"
+      }
+    },
+    "hats": {
+      "supported_categories": [
+        "beanie",
+        "baseball_cap"
+      ],
+      "parametric_3d": {
+        "skull_fit": "float",
+        "fold_height": "float",
+        "top_sag": "float",
+        "thickness": "float",
+        "material": "fabric",
+        "color": "hex"
+      }
+    }
+  },
+  "categories": {
+    "glasses": [],
+    "earrings": [
+      {
+        "id": "gold_hoop",
+        "label": "Gold Hoop Earrings",
+        "name": "Gold Hoop Earrings",
+        "path": "assets/accessories/earrings/gold_hoop.png",
+        "type": "earrings",
+        "category": "earrings",
+        "license": "project-local-generated",
+        "placeholder": false,
+        "default_scale": 0.18,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_offset_y_ratio": 0.015,
+        "default_alpha": 0.96,
+        "supported_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ],
+        "render_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ]
+      },
+      {
+        "id": "silver_stud",
+        "label": "Silver Stud Earrings",
+        "name": "Silver Stud Earrings",
+        "path": "assets/accessories/earrings/silver_stud.png",
+        "type": "earrings",
+        "category": "earrings",
+        "license": "project-local-generated",
+        "placeholder": false,
+        "default_scale": 0.1,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_offset_y_ratio": 0.0,
+        "default_alpha": 0.96,
+        "supported_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ],
+        "render_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ]
+      },
+      {
+        "id": "pearl_drop",
+        "label": "Pearl Drop Earrings",
+        "name": "Pearl Drop Earrings",
+        "path": "assets/accessories/earrings/pearl_drop.png",
+        "type": "earrings",
+        "category": "earrings",
+        "license": "project-local-generated",
+        "placeholder": false,
+        "default_scale": 0.16,
+        "default_offset_x": 0.0,
+        "default_offset_y": 4.0,
+        "default_offset_y_ratio": 0.015,
+        "default_alpha": 0.97,
+        "supported_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ],
+        "render_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ]
+      },
+      {
+        "id": "small_black_ring",
+        "label": "Small Black Ring Earrings",
+        "name": "Small Black Ring Earrings",
+        "path": "assets/accessories/earrings/small_black_ring.png",
+        "type": "earrings",
+        "category": "earrings",
+        "license": "project-local-generated",
+        "placeholder": false,
+        "default_scale": 0.13,
+        "default_offset_x": 0.0,
+        "default_offset_y": 2.0,
+        "default_offset_y_ratio": 0.01,
+        "default_alpha": 0.95,
+        "supported_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ],
+        "render_modes": [
+          "overlay_2d",
+          "pose_aware_2d"
+        ]
+      }
+    ],
+    "necklaces": [
+      {
+        "id": "gold_pendant_procedural",
+        "label": "Gold Pendant Necklace",
+        "name": "Gold Pendant Necklace",
+        "type": "necklace",
+        "category": "pendant_necklace",
+        "license": "project-local-procedural",
+        "placeholder": false,
+        "render_modes": [
+          "physics_3d",
+          "overlay_2d"
+        ],
+        "asset_role": "procedural_reference",
+        "material": "gold",
+        "default_scale": 1.0,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_metadata": {
+          "material": "gold",
+          "chain_length": 1.0,
+          "chain_thickness": 2.0,
+          "stiffness": 0.75,
+          "pendant_enabled": true,
+          "pendant_size": 0.12,
+          "pendant_weight": 1.0,
+          "anchor_mode": "clavicle_drape",
+          "contact_shadow": true,
+          "metal_highlight": 0.75
+        }
+      },
+      {
+        "id": "silver_pendant_procedural",
+        "label": "Silver Pendant Necklace",
+        "name": "Silver Pendant Necklace",
+        "type": "necklace",
+        "category": "pendant_necklace",
+        "license": "project-local-procedural",
+        "placeholder": false,
+        "render_modes": [
+          "physics_3d",
+          "overlay_2d"
+        ],
+        "asset_role": "procedural_reference",
+        "material": "silver",
+        "default_scale": 1.0,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_metadata": {
+          "material": "silver",
+          "chain_length": 1.05,
+          "chain_thickness": 1.8,
+          "stiffness": 0.72,
+          "pendant_enabled": true,
+          "pendant_size": 0.11,
+          "pendant_weight": 0.9,
+          "anchor_mode": "clavicle_drape",
+          "contact_shadow": true,
+          "metal_highlight": 0.85
+        }
+      },
+      {
+        "id": "pearl_choker_procedural",
+        "label": "Pearl Choker",
+        "name": "Pearl Choker",
+        "type": "necklace",
+        "category": "choker",
+        "license": "project-local-procedural",
+        "placeholder": false,
+        "render_modes": [
+          "physics_3d",
+          "overlay_2d"
+        ],
+        "asset_role": "procedural_reference",
+        "material": "pearl",
+        "default_scale": 1.0,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_metadata": {
+          "material": "pearl",
+          "chain_length": 0.68,
+          "chain_thickness": 3.0,
+          "stiffness": 0.92,
+          "pendant_enabled": false,
+          "pendant_size": 0.0,
+          "pendant_weight": 0.0,
+          "anchor_mode": "neck_loop",
+          "contact_shadow": true,
+          "pearl_highlight": 0.65
+        }
+      }
+    ],
+    "hair_clips": [],
+    "hats": [
+      {
+        "id": "beanie_black_wool_procedural",
+        "label": "Black Wool Beanie",
+        "name": "Black Wool Beanie",
+        "type": "hat",
+        "category": "beanie",
+        "license": "project-local-procedural",
+        "placeholder": false,
+        "render_modes": [
+          "parametric_3d",
+          "hat_light_inpaint",
+          "generative_hat_inpaint",
+          "hybrid_reference_inpaint"
+        ],
+        "asset_role": "procedural_reference",
+        "status_message": "Parametric hats are experimental-only. Realistic mode requires local CUDA and SD 1.5 inpaint + IP-Adapter model install.",
+        "material": "wool_fabric",
+        "default_scale": 1.0,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_metadata": {
+          "color": "#1f1f1f",
+          "skull_fit": 1.06,
+          "fold_height": 0.18,
+          "top_sag": 0.07,
+          "thickness": 0.09,
+          "fabric_texture_strength": 0.35,
+          "edge_softness": 0.65,
+          "contact_shadow": true
+        }
+      },
+      {
+        "id": "beanie_dark_gray_knit_procedural",
+        "label": "Dark Gray Knit Beanie",
+        "name": "Dark Gray Knit Beanie",
+        "type": "hat",
+        "category": "beanie",
+        "license": "project-local-procedural",
+        "placeholder": false,
+        "render_modes": [
+          "parametric_3d",
+          "hat_light_inpaint",
+          "generative_hat_inpaint",
+          "hybrid_reference_inpaint"
+        ],
+        "asset_role": "procedural_reference",
+        "status_message": "Parametric hats are experimental-only. Realistic mode requires local CUDA and SD 1.5 inpaint + IP-Adapter model install.",
+        "material": "knit_fabric",
+        "default_scale": 1.0,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_metadata": {
+          "color": "#343434",
+          "skull_fit": 1.04,
+          "fold_height": 0.22,
+          "top_sag": 0.1,
+          "thickness": 0.1,
+          "fabric_texture_strength": 0.5,
+          "edge_softness": 0.7,
+          "contact_shadow": true
+        }
+      },
+      {
+        "id": "baseball_cap_navy_procedural",
+        "label": "Navy Baseball Cap",
+        "name": "Navy Baseball Cap",
+        "type": "hat",
+        "category": "baseball_cap",
+        "license": "project-local-procedural",
+        "placeholder": false,
+        "render_modes": [
+          "parametric_3d",
+          "hat_light_inpaint",
+          "generative_hat_inpaint",
+          "hybrid_reference_inpaint"
+        ],
+        "asset_role": "procedural_reference",
+        "status_message": "Baseball cap is experimental-only. Realistic mode requires local CUDA and SD 1.5 inpaint + IP-Adapter model install.",
+        "material": "cotton_fabric",
+        "default_scale": 1.0,
+        "default_offset_x": 0.0,
+        "default_offset_y": 0.0,
+        "default_metadata": {
+          "color": "#101827",
+          "crown_width": 1.08,
+          "crown_height": 0.56,
+          "brim_length": 0.34,
+          "brim_width": 0.78,
+          "brim_curve": 0.28,
+          "front_panel_tilt": 0.1,
+          "side_slope": 0.14,
+          "fabric_texture_strength": 0.28,
+          "contact_shadow": true
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "lipstick": [
+    {"id": "nude", "label": "Nude", "hex": "#B86F62"},
+    {"id": "rose", "label": "Rose", "hex": "#C04A68"},
+    {"id": "red", "label": "Classic Red", "hex": "#B00020"},
+    {"id": "berry", "label": "Berry", "hex": "#7B1E4A"},
+    {"id": "coral", "label": "Coral", "hex": "#E66A5A"}
+  ],
+  "beard": [
+    {"id": "black", "label": "Black", "hex": "#1a1108"},
+    {"id": "dark_brown", "label": "Dark Brown", "hex": "#3B2418"},
+    {"id": "light_brown", "label": "Light Brown", "hex": "#7A4A2A"},
+    {"id": "blonde", "label": "Blonde", "hex": "#B58A4A"}
+  ],
+  "blush": [
+    {"id": "soft_pink", "label": "Soft Pink", "hex": "#E8A0A8"},
+    {"id": "peach", "label": "Peach", "hex": "#E6A06A"},
+    {"id": "rose", "label": "Rose", "hex": "#C96F7D"}
+  ],
+  "eyeshadow": [
+    {"id": "taupe", "label": "Taupe", "hex": "#8C7A6B"},
+    {"id": "bronze", "label": "Bronze", "hex": "#A56B35"},
+    {"id": "smoky", "label": "Smoky", "hex": "#3A3A3A"},
+    {"id": "gold", "label": "Gold", "hex": "#C8A047"}
+  ],
+  "eyeliner": [
+    {"id": "black", "label": "Black", "hex": "#080808"},
+    {"id": "brown", "label": "Brown", "hex": "#3B2418"},
+    {"id": "navy", "label": "Navy", "hex": "#172A5A"}
+  ]
+}

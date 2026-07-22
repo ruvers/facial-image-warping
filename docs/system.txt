@@ -1,0 +1,1109 @@
+Evet, genel olarak olmuş. `git status --short local_models` çıktısında `?? local_models/` görünmesi büyük ihtimalle sadece `.gitkeep` yüzünden. Detaylı görmek için:
+
+```powershell
+git status --short --untracked-files=all local_models
+```
+
+Eğer sadece şu görünürse sorun yok:
+
+```text
+?? local_models/.gitkeep
+```
+
+Bunu ekleyebilirsin:
+
+```powershell
+git add local_models\.gitkeep
+```
+
+Şimdi aşağıdaki içeriği `README.md` olarak kullanabilirsin. Projenin şu anki mimarisini, bizim eklediğimiz şeyleri, model kurulumunu, frontend formatını, local model mantığını ve geliştiricilerin nereden devam edeceğini anlatıyor.
+
+````md
+# FaceWarp Lab
+
+FaceWarp Lab, fotoğraf üzerinde yüz analizi, yüz segmentasyonu, aksesuar yerleşimi, makyaj efektleri, geometri tabanlı warp işlemleri ve opsiyonel lokal AI model slotları için hazırlanmış FastAPI tabanlı bir backend projesidir.
+
+Bu sürümde amaç, tek tek tüm efektleri tamamlamak değil; diğer geliştiricilerin üzerine efekt, asset ve model ekleyebileceği sağlam bir core foundation kurmaktır.
+
+---
+
+## Current Core Status
+
+Bu branch içinde aşağıdaki altyapılar eklendi veya düzenlendi:
+
+### Hazır olan core parçalar
+
+- MediaPipe tabanlı yüz landmark / anchor sistemi
+- Face parsing / semantic mask altyapısı
+- DECA / FLAME true 3D mesh provider
+- Local-only model registry
+- Model slot sistemi
+- Plugin validator
+- Accessory placement engine
+- Beauty / makeup effect hookları
+- Geometry / expression effect hookları
+- Aging model slotu
+- Expression model slotu
+- Local setup script
+- Model fallback mantığı
+- MediaPipe `face_landmarker.task` Windows path fix
+
+### Şu an aktif core providerlar
+
+| Görev | Kullanılan sistem |
+|---|---|
+| 2D landmark / anchor | MediaPipe |
+| Skin / hair / lips / eyes / ear / neck maskeleri | BiSeNet face parsing |
+| True 3D mesh | DECA / FLAME |
+| Accessory placement | Custom accessory engine |
+| Basic makeup | `beauty_v1.py` effectleri |
+| Aging model slot | SAM |
+| Expression model slot | LivePortrait |
+| Future 3D texture/albedo provider | AlbedoGAN status slot |
+
+---
+
+## Important Design Decision
+
+DECA, MediaPipe’ın yerine geçmez.
+
+Doğru kullanım:
+
+```text
+MediaPipe
+  -> 2D anchor
+  -> gözlük/küpe/kolye/toka/piercing yerleşimi
+  -> hızlı landmark
+  -> frontend preview / realtime temel
+
+BiSeNet face parsing
+  -> saç maskesi
+  -> cilt maskesi
+  -> dudak maskesi
+  -> kulak maskesi
+  -> boyun maskesi
+  -> göz / kaş maskesi
+
+DECA / FLAME
+  -> gerçek 3D mesh
+  -> 5023 vertices
+  -> 9976 faces
+  -> future geometry / expression / reshape foundation
+````
+
+Yani gözle görülen aksesuar yerleşiminde MediaPipe anchorları kullanılmaya devam eder. DECA ise gerçek 3D yüz geometrisi için sisteme eklenmiştir.
+
+---
+
+## Repository Structure
+
+Önemli klasörler:
+
+```text
+backend/
+  main.py
+  face_detection.py
+  face_analysis.py
+  face_parsing.py
+  effect_engine.py
+  effect_catalog.py
+  photo_pipeline.py
+  register_default_effects.py
+
+  accessories/
+    accessory-specific yardımcı modüller
+
+  effects/
+    beauty_v1.py
+    geometry_v1.py
+    expression_v1.py
+    accessory_v1.py
+    model_slots_v1.py
+
+  three_d/
+    manager.py
+    provider.py
+    deca_runtime.py
+    deca_provider.py
+    deca_diagnostics.py
+    deca_debug.py
+
+  local_models/
+    registry.py
+    runtime.py
+    slots.py
+    plugin_validator.py
+    sam_aging.py
+    liveportrait_expression.py
+    albedogan_3d.py
+    custom_plugins/
+      aging_model.py
+      expression_model.py
+      face_restore.py
+
+  core/
+  geometry/
+  realtime/
+  ai_enhancement/
+
+scripts/
+  setup_models.ps1
+
+local_models/
+  .gitkeep
+```
+
+`local_models/` içeriği git’e basılmaz. Sadece `.gitkeep` commitlenir.
+
+---
+
+## Local Models Policy
+
+Bu proje cloud API veya ücretli API gerektirmeden lokal çalışacak şekilde tasarlanmıştır.
+
+Large model files git’e eklenmez.
+
+Git’e girmemesi gerekenler:
+
+```text
+local_models/DECA/
+local_models/SAM/
+local_models/LivePortrait/
+local_models/face-parsing.PyTorch/
+local_models/deca_data/
+local_models/sam_aging/
+local_models/liveportrait_weights/
+local_models/LivePortrait/pretrained_weights/
+*.pt
+*.pth
+*.pkl
+*.tar
+*.onnx
+*.bin
+*.ckpt
+*.safetensors
+```
+
+Model dosyaları `scripts/setup_models.ps1` ile hazırlanır.
+
+---
+
+## Setup
+
+### 1. Clone repository
+
+```powershell
+git clone <repo-url>
+cd facial-image-warping
+```
+
+### 2. Create virtual environment
+
+```powershell
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+### 3. Install Python dependencies
+
+```powershell
+pip install -r requirements.txt
+```
+
+Eğer requirements güncel değilse en az şu paketler gerekir:
+
+```powershell
+pip install fastapi uvicorn python-multipart opencv-python numpy mediapipe pillow
+pip install torch torchvision
+pip install huggingface_hub
+pip install yacs kornia chumpy
+```
+
+Not: `chumpy` eski bir paket olduğu için Python 3.11+ ve yeni NumPy ile compatibility patch uygulanmıştır. DECA runtime içinde `inspect.getargspec` ve eski NumPy aliasları patchlenir.
+
+---
+
+## Model Setup Script
+
+Model dosyaları git’e eklenmediği için repo’yu çeken kişi şu script’i çalıştırmalıdır:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup_models.ps1
+```
+
+Script şunları yapar:
+
+* `local_models/` klasörünü oluşturur
+* DECA repo yoksa clone eder
+* SAM repo yoksa clone eder
+* LivePortrait repo yoksa clone eder
+* face-parsing.PyTorch repo yoksa clone eder
+* Hugging Face CLI için `huggingface_hub` kurar
+* SAM aging weight indirir
+* LivePortrait weightlerini indirir
+* LivePortrait weightlerini repo içindeki `pretrained_weights` path’ine mirror eder
+* DECA model dosyaları varsa DECA repo path’lerine mirror eder
+* model statuslarını yazdırır
+* plugin validator çalıştırır
+
+### Script options
+
+SAM indirmeyi atlamak için:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup_models.ps1 -SkipSam
+```
+
+LivePortrait indirmeyi atlamak için:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup_models.ps1 -SkipLivePortrait
+```
+
+DECA prepare adımını atlamak için:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup_models.ps1 -SkipDecaPrepare
+```
+
+Repo clone adımlarını atlamak için:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup_models.ps1 -SkipRepos
+```
+
+Test amaçlı hızlı çalıştırma:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup_models.ps1 -SkipSam -SkipLivePortrait
+```
+
+---
+
+## DECA / FLAME Setup
+
+DECA repo otomatik clone edilir:
+
+```text
+local_models/DECA
+```
+
+Ancak bazı DECA / FLAME dosyaları lisans nedeniyle manuel indirme gerektirebilir.
+
+Beklenen pathler:
+
+```text
+local_models/deca_data/weights/deca_model.tar
+local_models/deca_data/FLAME2020/generic_model.pkl
+```
+
+Script bu dosyalar varsa şuralara mirror eder:
+
+```text
+local_models/DECA/data/deca_model.tar
+local_models/DECA/data/generic_model.pkl
+local_models/DECA/data/FLAME2020/generic_model.pkl
+```
+
+DECA hazırsa sistem şu çıktıyı verir:
+
+```text
+provider: deca_flame
+is_true_3d: True
+vertices: (5023, 3)
+faces: (9976, 3)
+landmarks2d: (68, 2)
+```
+
+Renderer şimdilik kapalıdır. PyTorch3D zorunlu değildir.
+
+---
+
+## SAM Aging Model
+
+Aging için seçilen model slot standardı:
+
+```text
+SAM - Style-based Age Manipulation
+```
+
+Beklenen weight path:
+
+```text
+local_models/sam_aging/sam_ffhq_aging.pt
+```
+
+Status check:
+
+```powershell
+python -c "from backend.local_models.sam_aging import get_sam_aging_status; import json; print(json.dumps(get_sam_aging_status(), indent=2))"
+```
+
+Beklenen:
+
+```json
+{
+  "available": true,
+  "repo_ok": true,
+  "weights_ok": true
+}
+```
+
+Not: Şu an SAM için plugin bridge hazırdır, fakat full inference bridge henüz yazılmamıştır. Yani slot available olabilir ama görüntüyü değiştiren gerçek aging inference ayrıca eklenmelidir.
+
+---
+
+## LivePortrait Expression Model
+
+Expression için seçilen model slot standardı:
+
+```text
+LivePortrait
+```
+
+Beklenen weight klasörü:
+
+```text
+local_models/liveportrait_weights
+```
+
+Ayrıca runtime compatibility için mirror path:
+
+```text
+local_models/LivePortrait/pretrained_weights
+```
+
+Status check:
+
+```powershell
+python -c "from backend.local_models.liveportrait_expression import get_liveportrait_expression_status; import json; print(json.dumps(get_liveportrait_expression_status(), indent=2))"
+```
+
+Beklenen:
+
+```json
+{
+  "available": true,
+  "repo_ok": true,
+  "weights_ok": true
+}
+```
+
+Not: Şu an LivePortrait için plugin bridge hazırdır, fakat full expression inference bridge henüz yazılmamıştır.
+
+---
+
+## AlbedoGAN / Future 3D Provider
+
+ResearchGate’te görülen DECA/MICA comparison mantığı için opsiyonel future provider slotu eklendi:
+
+```text
+backend/local_models/albedogan_3d.py
+```
+
+Bu provider şu an aktif pipeline parçası değildir.
+
+Kullanım amacı:
+
+```text
+future high-quality 3D face / albedo / texture provider
+```
+
+Windows’ta upstream repo clone sırasında invalid filename hatası verebilir:
+
+```text
+data/<DECA pretrained models here.txt>
+```
+
+Bu yüzden setup script AlbedoGAN’ı otomatik clone etmez. Sadece status slotu vardır ve pipeline’ı bloklamaz.
+
+---
+
+## Face Parsing
+
+Semantic face masks için `face-parsing.PyTorch` kullanılır.
+
+Script bunu şuraya clone eder:
+
+```text
+local_models/face-parsing.PyTorch
+```
+
+Bu sistem şu maskeler için kullanılır:
+
+```text
+skin
+hair
+lips
+eyes
+eyebrows
+ears
+neck
+```
+
+Makeup, hair color, beard, skin smooth gibi efektlerin doğru çalışması için bu maskeler önemlidir.
+
+---
+
+## MediaPipe Face Detection Fix
+
+Eski `/api/process` hattında MediaPipe `face_landmarker.task` dosyasını relative path ile açıyordu:
+
+```python
+model_asset_path="face_landmarker.task"
+```
+
+Windows’ta bu bazen bozuk path üretiyordu:
+
+```text
+site-packages/D:\...\face_landmarker.task
+```
+
+Bu yüzden `backend/face_detection.py` içinde model dosyası artık bytes olarak okunup MediaPipe’a verilir:
+
+```python
+model_buffer = model_path.read_bytes()
+
+base_options = mp.tasks.BaseOptions(
+    model_asset_buffer=model_buffer,
+)
+```
+
+Bu eski sistemi bozmaz; sadece model yükleme path problemini çözer.
+
+`face_landmarker.task` küçük bir dosyadır ve repo’ya commitlenmelidir.
+
+---
+
+## Backend Run
+
+```powershell
+uvicorn backend.main:app --reload
+```
+
+Default URL:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+## Existing Frontend Compatibility
+
+Frontend şu eski endpointleri kullanır:
+
+```text
+POST /api/upload
+POST /api/process
+```
+
+Loglarda frontend’in `/api/process` için gönderdiği legacy param formatı:
+
+```json
+{
+  "smile_intensity": 0,
+  "eyebrow_height": 0,
+  "lip_intensity": 0,
+  "face_slimming": 0,
+  "aging_intensity": 1,
+  "item_type": "glasses"
+}
+```
+
+Ayrıca mode değeri örnek olarak:
+
+```text
+expression
+```
+
+Bu legacy format korunmalıdır. Yeni effect engine eklenmiş olsa bile eski frontend’in `/api/process` çağrısını kırmamak gerekir.
+
+---
+
+## New Effect Engine
+
+Yeni core effect engine dosyaları:
+
+```text
+backend/effect_engine.py
+backend/effect_catalog.py
+backend/photo_pipeline.py
+backend/register_default_effects.py
+```
+
+Effect engine şu mantıkla çalışır:
+
+```text
+image_bgr
+  -> analyze_face()
+  -> enrich_with_best_available_3d()
+  -> registered effects by stage
+  -> output image
+```
+
+Stage sırası:
+
+```text
+pre_geometry
+geometry
+beauty
+hair
+accessory
+postprocess
+```
+
+Effect fonksiyon contract:
+
+```python
+def apply_xxx(
+    image_bgr: np.ndarray,
+    ctx: dict,
+    params: dict,
+) -> np.ndarray:
+    ...
+    return image_bgr
+```
+
+Her effect bu formatı takip etmelidir.
+
+---
+
+## Context Format
+
+Face analysis sonrası context içinde beklenen ana alanlar:
+
+```python
+ctx = {
+    "landmarks": ...,
+    "landmarks_2d": ...,
+    "landmarks_3d": ...,
+    "parsing": ...,
+    "masks": ...,
+    "depth_map": ...,
+    "pose": ...,
+    "anchors": ...,
+    "three_d": ...,
+    "three_d_provider": ...
+}
+```
+
+### Anchor format
+
+```python
+ctx["anchors"] = {
+    "metrics": {
+        "face_width": float,
+        "face_height": float,
+        "face_center": tuple,
+    },
+
+    "glasses": {
+        "center": tuple,
+        "eye_distance": float,
+        "face_width": float,
+        "width": float,
+        "roll_deg": float,
+        "left_eye": tuple,
+        "right_eye": tuple,
+        "nose_bridge": tuple,
+    },
+
+    "earrings": {
+        "left": tuple,
+        "right": tuple,
+    },
+
+    "necklace": {
+        "center": tuple,
+        "width": float,
+        "chin": tuple,
+    },
+}
+```
+
+### 3D context format
+
+DECA aktifse:
+
+```python
+ctx["three_d"] = {
+    "provider": "deca_flame",
+    "provider_priority": "deca_first",
+    "is_true_3d": True,
+
+    "vertices": np.ndarray,       # (5023, 3)
+    "faces": np.ndarray,          # (9976, 3)
+    "landmarks2d": np.ndarray,    # (68, 2)
+    "landmarks3d": np.ndarray,    # (68, 3)
+
+    "mesh": {
+        "type": "deca_flame_mesh",
+        "vertices": ...,
+        "faces": ...,
+        "vertex_count": 5023,
+        "face_count": 9976,
+        "is_true_3d": True,
+    },
+
+    "flame_params": dict,
+    "camera": dict,
+    "renderer_enabled": False,
+}
+```
+
+DECA yoksa MediaPipe fallback kullanılmalıdır.
+
+---
+
+## Accessory Engine
+
+Yeni generic accessory engine:
+
+```text
+backend/accessory_engine.py
+backend/effects/accessory_v1.py
+```
+
+Desteklenen accessory type değerleri:
+
+```text
+glasses
+left_earring
+right_earring
+necklace
+```
+
+Temel kullanım:
+
+```python
+from backend.accessory_engine import apply_accessory_pack
+
+out = apply_accessory_pack(
+    image_bgr,
+    ctx,
+    {
+        "enabled": True,
+        "items": [
+            {
+                "type": "glasses",
+                "asset_path": "assets/glasses/example.png",
+                "scale": 1.0,
+                "alpha": 1.0
+            },
+            {
+                "type": "left_earring",
+                "asset_path": "assets/earrings/example.png",
+                "scale": 0.12,
+                "offset_y_ratio": 0.07
+            },
+            {
+                "type": "right_earring",
+                "asset_path": "assets/earrings/example.png",
+                "scale": 0.12,
+                "offset_y_ratio": 0.07
+            },
+            {
+                "type": "necklace",
+                "asset_path": "assets/necklaces/example.png",
+                "scale": 1.1,
+                "offset_y_ratio": 0.14
+            }
+        ]
+    }
+)
+```
+
+Asset yoksa debug placeholder kullanılabilir:
+
+```python
+{
+    "type": "glasses",
+    "debug_placeholder": True
+}
+```
+
+Accessory engine şunları yapar:
+
+```text
+asset loader
+RGBA alpha blending
+scale estimation
+rotation
+offset
+anchor-based placement
+placeholder debug
+```
+
+Şu an depth ordering / occlusion temel mimariye bırakılmıştır; gerçek asset entegrasyonu sırasında geliştirilebilir.
+
+---
+
+## Beauty / Makeup Effects
+
+Beauty tarafında mevcut effectler:
+
+```text
+apply_lipstick
+apply_blush
+apply_eyebrow_enhance
+apply_skin_smooth
+hair_color_effect
+```
+
+Bunlar `register_default_effects.py` içinde effect engine’e register edilir.
+
+Örnek param mantığı:
+
+```json
+{
+  "lipstick": {
+    "enabled": true,
+    "color": "#A02040",
+    "intensity": 0.7
+  },
+  "blush": {
+    "enabled": true,
+    "intensity": 0.4
+  },
+  "skin_smooth": {
+    "enabled": true,
+    "strength": 0.5
+  },
+  "hair_color": {
+    "enabled": true,
+    "color": "#7B3FE4",
+    "intensity": 0.75
+  }
+}
+```
+
+Gerçek frontend color picker / palette tarafı frontend ekibi tarafından bağlanabilir.
+
+---
+
+## Geometry / Expression
+
+Geometry ve expression için iki katman vardır:
+
+### 1. Classical warp layer
+
+```text
+backend/effects/geometry_v1.py
+backend/effects/expression_v1.py
+backend/geometry/
+```
+
+Burada landmark deformation, mesh warp, smile, face slimming gibi klasik işlemler geliştirilebilir.
+
+### 2. Model slot layer
+
+```text
+backend/local_models/custom_plugins/expression_model.py
+```
+
+Şu an LivePortrait expression slotu vardır. Weightler varsa status available olur, ama full inference bridge henüz yazılmamıştır.
+
+---
+
+## Aging
+
+Aging için slot:
+
+```text
+backend/local_models/custom_plugins/aging_model.py
+```
+
+Model standardı:
+
+```text
+SAM
+```
+
+Şu an status ve plugin bridge hazırdır. Full SAM inference bridge ayrıca eklenmelidir.
+
+---
+
+## Plugin System
+
+Model slotları:
+
+```text
+aging_model
+makeup_model
+expression_model
+accessory_model
+face_restore
+```
+
+Plugin contract:
+
+```python
+def apply(
+    image_bgr: np.ndarray,
+    ctx: dict,
+    params: dict,
+) -> np.ndarray:
+    ...
+    return image_bgr
+```
+
+Opsiyonel:
+
+```python
+def is_available() -> bool:
+    ...
+```
+
+Plugin validator:
+
+```powershell
+python -c "from backend.local_models.plugin_validator import validate_all_plugins; import json; print(json.dumps(validate_all_plugins(), indent=2))"
+```
+
+Beklenen sağlıklı sonuç:
+
+```json
+{
+  "local_only": true,
+  "cloud_or_paid_api_allowed": false,
+  "all_installed_plugins_valid": true
+}
+```
+
+`makeup_model` veya `accessory_model` plugin dosyası yoksa missing görünebilir. Bu fatal değildir; o slotun henüz doldurulmadığını gösterir.
+
+---
+
+## Debug / Test Commands
+
+Core compile:
+
+```powershell
+python -m py_compile backend\main.py
+python -m py_compile backend\face_detection.py
+python -m py_compile backend\face_analysis.py
+python -m py_compile backend\face_parsing.py
+python -m py_compile backend\effect_engine.py
+python -m py_compile backend\photo_pipeline.py
+python -m py_compile backend\register_default_effects.py
+python -m py_compile backend\three_d\deca_runtime.py
+python -m py_compile backend\three_d\deca_provider.py
+python -m py_compile backend\accessory_engine.py
+```
+
+DECA debug:
+
+```powershell
+python -m backend.test_deca_debug
+```
+
+Beklenen:
+
+```text
+provider: deca_flame
+is_true_3d: True
+vertices: (5023, 3)
+faces: (9976, 3)
+```
+
+Accessory debug:
+
+```powershell
+python -m backend.test_accessory_engine
+```
+
+Çıktı:
+
+```text
+accessory_engine_debug.jpg
+```
+
+Plugin validator:
+
+```powershell
+python -c "from backend.local_models.plugin_validator import validate_all_plugins; import json; print(json.dumps(validate_all_plugins(), indent=2))"
+```
+
+Server:
+
+```powershell
+uvicorn backend.main:app --reload
+```
+
+---
+
+## Git Rules
+
+Commitlenmeli:
+
+```text
+backend/
+frontend/
+assets/       # küçük asset/config ise
+scripts/setup_models.ps1
+README.md
+.gitignore
+requirements.txt
+face_landmarker.task
+local_models/.gitkeep
+```
+
+Commitlenmemeli:
+
+```text
+local_models/DECA/
+local_models/SAM/
+local_models/LivePortrait/
+local_models/face-parsing.PyTorch/
+local_models/deca_data/
+local_models/sam_aging/
+local_models/liveportrait_weights/
+local_models/LivePortrait/pretrained_weights/
+*.pt
+*.pth
+*.pkl
+*.tar
+*.onnx
+*.bin
+*.ckpt
+*.safetensors
+deca_debug.jpg
+accessory_engine_debug.jpg
+test.jpg
+```
+
+Güvenli add:
+
+```powershell
+git add .gitignore
+git add README.md
+git add scripts\setup_models.ps1
+git add local_models\.gitkeep
+git add face_landmarker.task
+git add backend
+git add frontend
+git add requirements.txt
+```
+
+Son kontrol:
+
+```powershell
+git status --short
+```
+
+Şunlar görünmemeli:
+
+```text
+local_models/SAM
+local_models/DECA
+local_models/LivePortrait
+local_models/sam_aging
+local_models/liveportrait_weights
+*.pt
+*.pth
+*.pkl
+*.tar
+deca_debug.jpg
+accessory_engine_debug.jpg
+test.jpg
+```
+
+---
+
+## Known Limitations
+
+* SAM aging weight ve slot hazırdır, ama full inference bridge henüz yazılmamıştır.
+* LivePortrait expression weight ve slot hazırdır, ama full inference bridge henüz yazılmamıştır.
+* AlbedoGAN future provider olarak status slotunda durur, aktif pipeline’da kullanılmaz.
+* DECA renderer kapalıdır; PyTorch3D zorunlu değildir.
+* DECA 68 landmarkları MediaPipe 2D anchor yerine kullanılmaz.
+* Accessory engine asset placement yapar, fakat gerçek occlusion/depth ordering sonraki aşamada geliştirilecektir.
+* Makeup model slotu henüz boş olabilir; klasik makeup effectleri mevcuttur.
+* Eski frontend `/api/process` formatı korunmalıdır.
+
+---
+
+## Developer Handoff
+
+Bu branch’in teslim ettiği ana iş:
+
+```text
+Core foundation:
+- Face analysis
+- Face parsing masks
+- MediaPipe anchors
+- DECA/FLAME true 3D mesh
+- Accessory placement engine
+- Beauty effect hooks
+- Geometry/expression hooks
+- SAM aging slot
+- LivePortrait expression slot
+- Optional AlbedoGAN future provider slot
+- Local model setup script
+- Plugin validator
+- Fallback/no-op architecture
+```
+
+Diğer geliştiriciler şunları ekleyebilir:
+
+```text
+Frontend:
+- color picker
+- effect intensity sliders
+- accessory asset selector
+- before/after preview
+- mode selector
+
+Accessory team:
+- PNG transparent glasses / earrings / necklace assets
+- asset-specific offsets
+- occlusion masks
+- depth ordering
+
+Makeup team:
+- improved lipstick
+- eyeliner
+- blush
+- contour
+- teeth whitening
+- AI makeup_model plugin
+
+Expression team:
+- LivePortrait runtime bridge
+- driving motion template support
+- smile / eyebrow / surprise presets
+
+Aging team:
+- SAM runtime bridge
+- age target parameter
+- before/after output
+
+3D team:
+- DECA mesh export
+- improved projection
+- optional renderer
+- future AlbedoGAN provider
+```
+
+---
+
+## Current Recommended Next Step
+
+Önce mevcut çalışan pipeline korunmalı:
+
+```text
+1. /api/upload çalışıyor mu?
+2. /api/process eski frontend formatıyla çalışıyor mu?
+3. face_landmarker.task load hatası yok mu?
+4. DECA debug çalışıyor mu?
+5. accessory debug çalışıyor mu?
+6. plugin validator valid mi?
+```
+
+Bunlar geçtikten sonra README, `.gitignore` ve setup script ile branch pushlanabilir.
+
+```
+
+Şu an README için bu içerik yeterli. Sonraki kritik kontrol: `backend/face_parsing.py` gerçekten `local_models\face-parsing.PyTorch` yolunu destekliyor mu. Bu destek yoksa repo’yu çeken kişide face parsing kırılır.
+```

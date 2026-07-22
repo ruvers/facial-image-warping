@@ -1,0 +1,17 @@
+{
+  "python.terminal.useEnvFile": true,
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false,
+  "html.validate.scripts": false,
+  "html.validate.styles": false,
+  "emmet.includeLanguages": {
+    "html": "html"
+  },
+  "files.associations": {
+    "*.html": "html"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  }
+}
